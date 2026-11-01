@@ -66,6 +66,12 @@ export const defaultContentPageLayout: PageLayout = {
       // 依檔名排序（01-、02- 的系列編號），不用標題排，系列文章才會排在一起
       sortFn: (a, b) => {
         if (a.isFolder !== b.isFolder) return a.isFolder ? -1 : 1
+        // 分類順序：讀、想、吃喝、玩、練（其他照檔名）
+        // sortFn 會整段被搬到瀏覽器執行，順序清單要寫在函式裡面
+        const order = ["read", "think", "eat-drink", "play", "practice"]
+        const ai = order.indexOf(a.slugSegment)
+        const bi = order.indexOf(b.slugSegment)
+        if (ai !== -1 && bi !== -1) return ai - bi
         return a.slugSegment.localeCompare(b.slugSegment, undefined, {
           numeric: true,
           sensitivity: "base",
@@ -114,6 +120,12 @@ export const defaultListPageLayout: PageLayout = {
       // 依檔名排序（01-、02- 的系列編號），不用標題排，系列文章才會排在一起
       sortFn: (a, b) => {
         if (a.isFolder !== b.isFolder) return a.isFolder ? -1 : 1
+        // 分類順序：讀、想、吃喝、玩、練（其他照檔名）
+        // sortFn 會整段被搬到瀏覽器執行，順序清單要寫在函式裡面
+        const order = ["read", "think", "eat-drink", "play", "practice"]
+        const ai = order.indexOf(a.slugSegment)
+        const bi = order.indexOf(b.slugSegment)
+        if (ai !== -1 && bi !== -1) return ai - bi
         return a.slugSegment.localeCompare(b.slugSegment, undefined, {
           numeric: true,
           sensitivity: "base",

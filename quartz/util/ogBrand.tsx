@@ -12,9 +12,11 @@ const AUTHOR = "Chris Chiu"
 
 // 資料夾 → 顯示名稱（對齊各資料夾 index.md 的 title）
 const FOLDER_LABELS: Record<string, string> = {
-  ramen: "拉麵與美食",
-  essays: "隨筆",
-  books: "讀書與影音",
+  read: "讀",
+  think: "想",
+  "eat-drink": "吃喝",
+  play: "玩",
+  practice: "練",
 }
 
 function folderLabel(slug: string): string | undefined {
@@ -48,7 +50,7 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
       <div style={{ ...frame, padding: "84px 96px" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 26, fontWeight: 500, letterSpacing: 2, color: ORANGE_TEXT }}>
-            拉麵 · 隨筆 · 讀書與影音
+            工作以外的記錄
           </div>
           <div
             style={{ fontFamily: headerFont, fontWeight: 700, fontSize: 84, color: "#1D2B28", marginTop: 18 }}
@@ -56,9 +58,8 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
             {cfg.pageTitle}
           </div>
           <div style={{ fontSize: 36, fontWeight: 500, color: "#1D2B28", marginTop: 26 }}>
-            吃過的、想過的、看過的
+            讀、想、吃喝、玩、練
           </div>
-          <div style={{ fontSize: 28, color: GRAY, marginTop: 8 }}>工作以外的記錄。</div>
           <div style={{ width: 120, height: 8, backgroundColor: ORANGE, marginTop: 30 }} />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: GRAY }}>
