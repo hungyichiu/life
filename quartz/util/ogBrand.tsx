@@ -1,12 +1,12 @@
 import { SocialImageOptions } from "./og"
 import { getFontSpecificationName } from "./theme"
 
-// 每篇文章的預覽圖（og:image），配色對齊生活站：米白底＋磚紅 #B5462E
+// 每篇文章的預覽圖（og:image），配色對齊生活站：米白底＋海軍藍＋芥末黃
 // satori 只支援 flex 排版，有多個子元素的 div 都要 display: flex
 
-const ORANGE = "#B5462E"
-const ORANGE_TEXT = "#8C3A24"
-const GRAY = "#75695F"
+const ORANGE = "#D9962B"
+const ORANGE_TEXT = "#1E4F8A"
+const GRAY = "#6B7380"
 const SITE_URL = "hungyichiu.github.io/life"
 const AUTHOR = "Chris Chiu"
 
@@ -37,7 +37,7 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
     display: "flex",
     flexDirection: "column" as const,
     justifyContent: "space-between",
-    backgroundColor: "#FBF8F3",
+    backgroundColor: "#FDFCF8",
     borderLeft: `24px solid ${ORANGE}`,
     fontFamily: bodyFont,
   }
@@ -51,11 +51,11 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
             拉麵 · 隨筆 · 讀書與影音
           </div>
           <div
-            style={{ fontFamily: headerFont, fontWeight: 700, fontSize: 84, color: "#241D18", marginTop: 18 }}
+            style={{ fontFamily: headerFont, fontWeight: 700, fontSize: 84, color: "#1E2A3A", marginTop: 18 }}
           >
             {cfg.pageTitle}
           </div>
-          <div style={{ fontSize: 36, fontWeight: 500, color: "#241D18", marginTop: 26 }}>
+          <div style={{ fontSize: 36, fontWeight: 500, color: "#1E2A3A", marginTop: 26 }}>
             吃過的、想過的、看過的
           </div>
           <div style={{ fontSize: 28, color: GRAY, marginTop: 8 }}>工作以外的記錄。</div>
@@ -63,7 +63,7 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: GRAY }}>
           <div>{AUTHOR}</div>
-          <div style={{ color: "#241D18", fontWeight: 500 }}>{SITE_URL}</div>
+          <div style={{ color: "#1E2A3A", fontWeight: 500 }}>{SITE_URL}</div>
         </div>
       </div>
     )
@@ -86,7 +86,7 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
             fontWeight: 700,
             fontSize: titleSize,
             lineHeight: 1.3,
-            color: "#241D18",
+            color: "#1E2A3A",
             marginTop: 20,
             wordBreak: "keep-all",
             lineClamp: 3,
@@ -107,7 +107,7 @@ export const brandImage: SocialImageOptions["imageStructure"] = ({ cfg, title, d
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 24, color: GRAY }}>
-        <div style={{ color: "#241D18", fontWeight: 500 }}>{cfg.pageTitle}</div>
+        <div style={{ color: "#1E2A3A", fontWeight: 500 }}>{cfg.pageTitle}</div>
         <div>
           {`${AUTHOR} · ${SITE_URL}`}
         </div>

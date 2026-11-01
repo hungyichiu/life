@@ -2,11 +2,14 @@
 
 // 面板色（程式碼區塊、行內 code）：Quartz 的 theme 沒有這一格，自己補
 :root {
-  --panel: #f1ece4;
+  --panel: #f3f1ea;
+  // 芥末黃：底線、引言線、分隔線用，不拿來當文字色（白底對比不夠）
+  --accent: #d9962b;
 }
 
 :root[saved-theme="dark"] {
-  --panel: #262220;
+  --panel: #1c2433;
+  --accent: #e9b25a;
 }
 
 // ---------------------------------------------------------------
@@ -85,7 +88,7 @@ article a.internal:not(.tag-link),
   line-height: inherit;
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, var(--secondary) 60%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
   text-underline-offset: 0.2em;
   transition: text-decoration-color 0.15s ease, color 0.15s ease;
 
@@ -97,7 +100,7 @@ article a.internal:not(.tag-link),
 article a.external {
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, var(--secondary) 60%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
   text-underline-offset: 0.2em;
 }
 
@@ -110,7 +113,7 @@ article a.external {
     color: var(--dark);
     font-weight: 500;
     text-decoration-thickness: 2px;
-    text-decoration-color: var(--secondary);
+    text-decoration-color: var(--accent);
 
     &:hover {
       color: var(--tertiary);
@@ -187,7 +190,7 @@ input:focus-visible {
   color: var(--dark);
   margin: -0.4rem 0 1.4rem;
   padding-left: 0.8rem;
-  border-left: 3px solid var(--secondary);
+  border-left: 3px solid var(--accent);
 
   span {
     font-family: var(--bodyFont);
@@ -217,7 +220,7 @@ input:focus-visible {
 }
 
 .home-track {
-  border-top: 2px solid var(--secondary);
+  border-top: 2px solid var(--accent);
   padding-top: 0.7rem;
 
   h3 {
@@ -244,7 +247,7 @@ input:focus-visible {
 }
 
 // ---------------------------------------------------------------
-// 淺色模式的標籤和麵包屑用深一階的磚紅，小字比較讀得清楚
+// 淺色模式的標籤和麵包屑用深一階的海軍藍
 // ---------------------------------------------------------------
 :root[saved-theme="light"] {
   .tags .tag-link,
