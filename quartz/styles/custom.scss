@@ -1,0 +1,254 @@
+@use "./base.scss";
+
+// 面板色（程式碼區塊、行內 code）：Quartz 的 theme 沒有這一格，自己補
+:root {
+  --panel: #f1ece4;
+}
+
+:root[saved-theme="dark"] {
+  --panel: #262220;
+}
+
+// ---------------------------------------------------------------
+// 字級與行高：中文內文行高要比拉丁文高，1.8 左右讀起來才不擠
+// ---------------------------------------------------------------
+html {
+  font-size: 17px;
+}
+
+body {
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+article p,
+article li {
+  line-height: 1.85;
+}
+
+article li {
+  margin: 0.2rem 0;
+}
+
+// ---------------------------------------------------------------
+// 標題：Noto Serif TC 粗體，當成版面上的主角；表格表頭維持無襯線
+// ---------------------------------------------------------------
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+h1.article-title {
+  font-size: 2.1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+  margin-top: 2.4rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin-top: 1.8rem;
+}
+
+thead {
+  font-family: var(--bodyFont);
+  font-weight: 700;
+}
+
+// 左欄網站名稱：縮小到一行放得下
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+// ---------------------------------------------------------------
+// 連結：內文連結改成底線，不用藍底藥丸；tag 保留小標籤樣式
+// ---------------------------------------------------------------
+article a.internal:not(.tag-link),
+.backlinks a.internal,
+.prevnext a.internal {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  line-height: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--secondary) 60%, transparent);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    text-decoration-color: var(--tertiary);
+  }
+}
+
+article a.external {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--secondary) 60%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+// 淺色模式：橘字在白底只有 2.9:1，內文連結字維持黑色、改用粗橘底線標示，滑過才變橘
+:root[saved-theme="light"] {
+  article a.internal:not(.tag-link),
+  article a.external,
+  .backlinks a.internal,
+  .prevnext a.internal {
+    color: var(--dark);
+    font-weight: 500;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--secondary);
+
+    &:hover {
+      color: var(--tertiary);
+    }
+  }
+}
+
+.tags .tag-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.content-meta {
+  font-size: 0.9rem;
+}
+
+// ---------------------------------------------------------------
+// 程式碼：Eclipse ADT 風格的淺色區塊，深色模式用 VS Code dark
+// ---------------------------------------------------------------
+.shiki {
+  border-radius: 4px;
+  padding: 1em;
+  font-size: 0.85em;
+  line-height: 1.6;
+  border: 1px solid var(--lightgray);
+}
+
+.shiki.light-plus,
+:root[saved-theme="dark"] .shiki.dark-plus {
+  background-color: var(--panel) !important;
+}
+
+:not(pre) > code {
+  background-color: var(--panel);
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+// ---------------------------------------------------------------
+// 品質底線：鍵盤焦點看得到、尊重減少動態設定
+// ---------------------------------------------------------------
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+// ---------------------------------------------------------------
+// 首頁開場：一句定位當主角，底下三條軌道各一個起點
+// ---------------------------------------------------------------
+.home-hero h1 {
+  font-size: 2.6rem;
+  line-height: 1.2;
+  margin: 0.4rem 0 1.2rem;
+}
+
+// 個人標語：中英兩行，放在大標底下當副標
+.home-hero p.home-tagline {
+  font-family: var(--headerFont);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--dark);
+  margin: -0.4rem 0 1.4rem;
+  padding-left: 0.8rem;
+  border-left: 3px solid var(--secondary);
+
+  span {
+    font-family: var(--bodyFont);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray);
+  }
+}
+
+.home-hero p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  max-width: 34em;
+  color: var(--darkgray);
+}
+
+.home-tracks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin: 2.4rem 0 3.2rem;
+
+  @media all and (max-width: 800px) {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+}
+
+.home-track {
+  border-top: 2px solid var(--secondary);
+  padding-top: 0.7rem;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin: 0.4rem 0;
+  }
+
+  p:last-child {
+    color: var(--gray);
+    font-size: 0.88rem;
+
+    // 「看全部」這種短連結不要被折成兩行
+    a {
+      white-space: nowrap;
+    }
+  }
+}
+
+// ---------------------------------------------------------------
+// 淺色模式的標籤和麵包屑用深一階的磚紅，小字比較讀得清楚
+// ---------------------------------------------------------------
+:root[saved-theme="light"] {
+  .tags .tag-link,
+  .breadcrumb-element a {
+    color: var(--tertiary);
+  }
+}
