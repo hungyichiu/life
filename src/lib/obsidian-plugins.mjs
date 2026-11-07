@@ -31,10 +31,13 @@ export function resolveWikilink(target, files) {
 
 function assetUrl(name, filePath, root) {
   if (!filePath) return null;
-  const realRoot = fs.realpathSync(root);
-  if (!fs.existsSync(path.join(realRoot, '_assets', name))) return null;
+  // Obsidian 預設把附件存到當前資料夾的 _assets，所以先找同層，再找 life/_assets
   const from = fs.realpathSync(path.dirname(filePath));
-  const rel = path.relative(from, path.join(realRoot, '_assets', name)).replaceAll('\\', '/');
+  const found = [from, fs.realpathSync(root)]
+    .map((dir) => path.join(dir, '_assets', name))
+    .find((candidate) => fs.existsSync(candidate));
+  if (!found) return null;
+  const rel = path.relative(from, found).replaceAll('\\', '/');
   return rel.startsWith('.') ? rel : `./${rel}`;
 }
 

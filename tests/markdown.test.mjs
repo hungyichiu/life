@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createMarkdownProcessor } from '@astrojs/markdown-remark';
@@ -46,6 +47,20 @@ test('開頭中文放大首字、開頭英數變引言', async () => {
   assert.match(await render('早上七點'), /<p class="dropcap">早上/);
   assert.match(await render('10/31 去了展覽'), /<span class="leadin">10\/31<\/span> 去了/);
   assert.doesNotMatch(await render('第一段\n\n10/31 第二段'), /leadin/);
+});
+
+test('圖片：同層 _assets 和根目錄 _assets 都找得到', async () => {
+  const dir = 'tests/fixtures/content/eat-drink/_assets';
+  fs.mkdirSync(dir, { recursive: true });
+  fs.copyFileSync('tests/fixtures/content/_assets/fixture.webp', `${dir}/sibling.webp`);
+  try {
+    // Astro 建置時才換成最佳化後的網址，這裡看相對路徑是否正確
+    assert.match(await render('![[sibling.webp|同層]]'), /\.\/_assets\/sibling\.webp/);
+    assert.match(await render('![[fixture.webp|根目錄]]'), /\.\.\/_assets\/fixture\.webp/);
+    assert.doesNotMatch(await render('![[no-such.webp]]'), /<img/);
+  } finally {
+    fs.rmSync(dir, { recursive: true });
+  }
 });
 
 test('表格包進可捲動容器', async () => {
