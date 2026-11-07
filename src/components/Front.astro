@@ -1,0 +1,51 @@
+---
+import { MIN_FOR_WALL, SECTIONS, formatDate, headlineHtml, readingMinutes, renderExcerpt, sectionOf, shortDate, url, type Entry } from '../lib/site';
+
+interface Props { articles: Entry[] }
+const { articles } = Astro.props;
+const lead = articles[0];
+const excerpt = await renderExcerpt(lead.body);
+const section = sectionOf(lead);
+const showLatest = articles.length >= MIN_FOR_WALL;
+const counts = new Map(SECTIONS.map((s) => [s.key, articles.filter((a) => sectionOf(a)?.key === s.key).length]));
+const moodMatch = lead.data.mood?.match(/^(\p{Extended_Pictographic}\S*)\s*(.*)$/u);
+const moodIcon = moodMatch?.[1];
+const moodText = moodMatch ? moodMatch[2] : lead.data.mood;
+---
+<section class="front">
+  <article class="lead">
+    <div class="kicker">頭條{section ? `・${section.name}` : ''}</div>
+    <h2 class="headline"><a href={url(`${lead.id}/`)} set:html={headlineHtml(lead.data.title)} /></h2>
+    <div class="byline">本報特派員 Chris　｜　{formatDate(lead.data.created)}　｜　閱讀時間約 {readingMinutes(lead.body)} 分鐘</div>
+    <div class="body" set:html={excerpt} />
+    <a class="more" href={url(`${lead.id}/`)}>繼續閱讀 →</a>
+  </article>
+  <aside class="side">
+    {lead.data.mood && (
+      <div class="weather">
+        <div class="label">本期心情氣象</div>
+        {moodIcon && <div class="icon">{moodIcon}</div>}
+        <div class="mood">{moodText}</div>
+      </div>
+    )}
+    {showLatest ? (
+      <>
+        <h3>最新文章</h3>
+        <ul class="brief">
+          {articles.slice(1, 4).map((a) => (
+            <li><a href={url(`${a.id}/`)}>{a.data.title}</a><span>{sectionOf(a)?.name} ・ {shortDate(a.data.created)}</span></li>
+          ))}
+        </ul>
+      </>
+    ) : (
+      <>
+        <h3>各版現況</h3>
+        <ul class="brief">
+          {SECTIONS.map((s) => counts.get(s.key)
+            ? <li><a href={url(`${s.key}/`)}>{s.name}</a><span>{counts.get(s.key)} 篇</span></li>
+            : <li class="empty">{s.name}<span>尚未出刊</span></li>)}
+        </ul>
+      </>
+    )}
+  </aside>
+</section>

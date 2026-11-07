@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SECTIONS, formatDate, getArticles, getSectionDescription, sectionOf, url } from '../../lib/site';
+
+export function getStaticPaths() {
+  return SECTIONS.map((s) => ({ params: { section: s.key }, props: { section: s } }));
+}
+const { section } = Astro.props;
+const all = await getArticles();
+const list = all.filter((a) => sectionOf(a)?.key === section.key);
+const description = await getSectionDescription(section.key);
+---
+<Base title={section.name} description={description || undefined} active={section.key} issue={all.length} issueDate={all[0]?.data.created}>
+  <main>
+    <div class="section-head">
+      <div class="kicker">本報分版</div>
+      <h1>{section.name}</h1>
+      {description && <p>{description}</p>}
+    </div>
+    {list.length ? (
+      <ul class="index">
+        {list.map((a) => (
+          <li>
+            <a href={url(`${a.id}/`)}>
+              <span class="date">{formatDate(a.data.created)}</span>
+              <h2>{a.data.title}</h2>
+              {a.data.description && <p>{a.data.description}</p>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="blank"><b>本版尚未出刊</b>記者還在路上。</div>
+    )}
+  </main>
+</Base>

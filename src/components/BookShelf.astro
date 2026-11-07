@@ -1,0 +1,42 @@
+---
+import { spine, url, type Entry } from '../lib/site';
+interface Props { books: Entry[] }
+const { books } = Astro.props;
+---
+<h2 class="section-title">讀書版・書架</h2>
+<div class="shelf" id="shelf">
+  {books.map((b) => {
+    const s = spine(b.id);
+    return (
+      <button type="button" class="book" style={`background:${s.color};height:${s.height}px`}
+        data-name={b.data.book} data-quote={b.data.quote ?? ''} data-note={b.data.description ?? ''} data-href={url(`${b.id}/`)}>
+        {b.data.book}
+      </button>
+    );
+  })}
+</div>
+<div class="reader" id="reader" aria-live="polite">
+  <h3 id="readerName"></h3>
+  <div class="q" id="readerQuote"></div>
+  <p id="readerNote" style="margin:.4em 0"></p>
+  <a id="readerLink">讀這篇 →</a>
+</div>
+
+<script>
+  const reader = document.getElementById('reader')!;
+  const set = (id: string, text: string) => { document.getElementById(id)!.textContent = text; };
+  document.querySelectorAll<HTMLButtonElement>('.book').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.book').forEach((x) => x.classList.remove('out'));
+      b.classList.add('out');
+      const { name, quote, note, href } = b.dataset;
+      set('readerName', `《${name}》`);
+      set('readerQuote', quote ? `「${quote}」` : '');
+      set('readerNote', note ?? '');
+      (document.getElementById('readerLink') as HTMLAnchorElement).href = href ?? '#';
+      reader.classList.remove('show');
+      void reader.offsetWidth;
+      reader.classList.add('show');
+    });
+  });
+</script>

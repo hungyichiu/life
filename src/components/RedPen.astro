@@ -1,0 +1,37 @@
+---
+// 把 ==重點== 轉出來的 <mark-red> 畫成紅筆：短的圈、長的畫線
+---
+<script>
+  import { annotate } from 'rough-notation';
+
+  let marks: { remove(): void }[] = [];
+  function draw() {
+    marks.forEach((m) => m.remove());
+    marks = [];
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--red').trim();
+    const animate = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLElement>('mark-red').forEach((el) => {
+      const circle = el.dataset.type === 'circle';
+      const a = annotate(el, {
+        type: circle ? 'circle' : 'underline',
+        color,
+        strokeWidth: 2,
+        padding: circle ? 5 : 2,
+        multiline: true,
+        iterations: circle ? 2 : 1,
+        animate,
+      });
+      a.show();
+      marks.push(a);
+    });
+  }
+  // 中文字型分片載入，每載完一批字寬就可能變，要重新對位
+  let timer: number | undefined;
+  const redo = () => { clearTimeout(timer); timer = window.setTimeout(draw, 120); };
+  if (document.querySelector('mark-red')) {
+    draw();
+    document.fonts.ready.then(redo);
+    document.fonts.addEventListener('loadingdone', redo);
+    document.addEventListener('themechange', draw);
+  }
+</script>

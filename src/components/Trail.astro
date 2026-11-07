@@ -1,0 +1,48 @@
+---
+// 報頭拖尾：滑鼠移動噴小物，手機點報頭噴一把。只放在首頁。
+---
+<script>
+  const box = document.getElementById('masthead')!;
+  const items = ['☕', '📚', '🎮', '✏️', '🎧', '🌙', '🧠', '📰', '🍵', '🏃', '🪴', '💡'];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hint = document.getElementById('hint');
+  if (hint && matchMedia('(hover: none)').matches) hint.textContent = '↑ 點報名看看';
+
+  let last = { x: 0, y: 0 };
+  let i = 0;
+  function spawn(x: number, y: number, spread: number) {
+    const el = document.createElement('span');
+    el.className = 'trail';
+    el.textContent = items[i++ % items.length];
+    el.style.left = `${x - 20}px`;
+    el.style.top = `${y - 22}px`;
+    box.appendChild(el);
+    const rot = Math.random() * 60 - 30;
+    const dx = Math.random() * spread - spread / 2;
+    el.animate(
+      [
+        { transform: 'scale(.2) rotate(0deg)', opacity: 0 },
+        { transform: `scale(1.15) rotate(${rot}deg)`, opacity: 1, offset: 0.18 },
+        { transform: `translate(${dx}px,60px) scale(.6) rotate(${rot * 2}deg)`, opacity: 0 },
+      ],
+      { duration: 1100, easing: 'cubic-bezier(.2,.8,.3,1)' },
+    ).onfinish = () => el.remove();
+  }
+  const pos = (e: PointerEvent) => {
+    const r = box.getBoundingClientRect();
+    return [e.clientX - r.left, e.clientY - r.top];
+  };
+  box.addEventListener('pointermove', (e) => {
+    if (reduce || e.pointerType !== 'mouse') return;
+    const [x, y] = pos(e);
+    if (Math.hypot(x - last.x, y - last.y) < 70) return;
+    last = { x, y };
+    spawn(x, y, 60);
+  });
+  box.addEventListener('pointerup', (e) => {
+    if (reduce || e.pointerType === 'mouse') return;
+    if ((e.target as Element).closest('nav,button')) return;
+    const [x, y] = pos(e);
+    for (let n = 0; n < 7; n++) spawn(x + Math.random() * 120 - 60, y + Math.random() * 50 - 25, 120);
+  });
+</script>

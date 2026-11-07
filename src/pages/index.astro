@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Front from '../components/Front.astro';
+import ClipWall from '../components/ClipWall.astro';
+import BookShelf from '../components/BookShelf.astro';
+import Trail from '../components/Trail.astro';
+import { MIN_FOR_SHELF, MIN_FOR_WALL, getArticles } from '../lib/site';
+
+const articles = await getArticles();
+const n = articles.length;
+const books = articles.filter((a) => a.id.startsWith('read/') && a.data.book);
+const extra = n >= MIN_FOR_WALL
+  ? `本報累計刊出 ${n} 篇，記者仍在趕稿。`
+  : `本報創刊，全報目前只有${n === 1 ? '一' : ` ${n} `}篇文章，記者正在趕稿。`;
+---
+<Base home issue={n} issueDate={articles[0]?.data.created}>
+  <main>
+    <div class="extra"><b>號外！</b><span>{extra}</span></div>
+    {n > 0
+      ? <Front articles={articles} />
+      : <div class="blank"><b>創刊號印製中</b>記者還在路上。</div>}
+    {n >= MIN_FOR_WALL && <ClipWall articles={articles.slice(1, 7)} />}
+    {books.length >= MIN_FOR_SHELF && <BookShelf books={books} />}
+  </main>
+  <Trail />
+</Base>

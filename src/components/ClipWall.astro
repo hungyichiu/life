@@ -1,0 +1,18 @@
+---
+import { sectionOf, tilt, url, type Entry } from '../lib/site';
+interface Props { articles: Entry[] }
+const { articles } = Astro.props;
+---
+<h2 class="section-title">剪報牆</h2>
+<section class="wall">
+  {articles.map((a, i) => (
+    <a class="clip" href={url(`${a.id}/`)} style={`--r:${tilt(i)}deg`}>
+      <i class="tape" style={`--t:${tilt(i + 2) * 1.5}deg`}></i>
+      <div class="sheet">
+        <div class="tag">{sectionOf(a)?.name}</div>
+        <h3>{a.data.title}</h3>
+        {a.data.description && <p>{a.data.description}</p>}
+      </div>
+    </a>
+  ))}
+</section>

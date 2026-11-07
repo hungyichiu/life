@@ -1,0 +1,26 @@
+{
+  "name": "astro-life",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "dev:fixtures": "node --env-file=tests/fixtures/fixtures.env node_modules/astro/bin/astro.mjs dev",
+    "build:fixtures": "node --env-file=tests/fixtures/fixtures.env node_modules/astro/bin/astro.mjs build --outDir dist-fixtures",
+    "test": "node --test tests/markdown.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.6",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.7",
+    "mdast-util-find-and-replace": "^3.0.4",
+    "rough-notation": "^0.5.1",
+    "unist-util-visit": "^5.2.0"
+  }
+}
