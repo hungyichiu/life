@@ -1,0 +1,2489 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="愛樂壓 × Prismo 互動沖煮實驗室：選烘焙度、人數、水溫、浸泡時間，估算萃取率與風味平衡，也能存自己的配方。">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+
+  <title>愛樂壓 Prismo 實驗室</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700;800&display=swap">
+  <style>
+    /* Layout: sticky quick-tuner bar on top; desktop split view (controls left, live charts right); one column on phones. Dark lab by default, light "晨光館" via system or toggle. */
+    :root {
+      color-scheme: dark;
+      --tuner-bg: rgba(19, 27, 46, 0.90);
+      --bg-base: #0b0f19;
+      --bg-card: #131b2e;
+      --bg-sub: #0f1624;
+      --bg-elevated: #1e293b;
+      --border-color: #2e3c56;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --text-muted: #64748b;
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: rgba(245, 158, 11, 0.16);
+      --accent-emerald: #10b981;
+      --accent-emerald-bg: rgba(16, 185, 129, 0.16);
+      --accent-sky: #38bdf8;
+      --accent-sky-bg: rgba(56, 189, 248, 0.16);
+      --accent-red: #ef4444;
+      --accent-red-bg: rgba(239, 68, 68, 0.16);
+      --svg-bg: #0b0f19;
+      --svg-panel: #111827;
+      --svg-grid: #1e293b;
+      --svg-axis: #94a3b8;
+      --bar-track: #0b0f19;
+      --marker-line: rgba(255, 255, 255, 0.55);
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+      --bg-base: #f8f5f0;
+      --bg-card: #ffffff;
+      --bg-sub: #f1ece4;
+      --bg-elevated: #e6dfd5;
+      --border-color: #dfd7cc;
+      --text-main: #1e293b;
+      --text-sub: #576574;
+      --text-muted: #8395a7;
+      --accent-amber: #d97706;
+      --accent-amber-bg: rgba(217, 119, 6, 0.14);
+      --accent-emerald: #059669;
+      --accent-emerald-bg: rgba(5, 150, 105, 0.13);
+      --accent-sky: #0284c7;
+      --accent-sky-bg: rgba(2, 132, 199, 0.13);
+      --accent-red: #dc2626;
+      --accent-red-bg: rgba(220, 38, 38, 0.13);
+      --svg-bg: #f6f2eb;
+      --svg-panel: #ffffff;
+      --svg-grid: #e2d9cc;
+      --svg-axis: #475569;
+      --bar-track: #e6dfd5;
+      --marker-line: rgba(30, 41, 59, 0.55);
+      --shadow-card: 0 8px 20px -4px rgba(120, 90, 60, 0.08);
+      --tuner-bg: rgba(255, 255, 255, 0.92);
+      color-scheme: light;
+      }
+    }
+    :root[data-theme="light"] {
+      --bg-base: #f8f5f0;
+      --bg-card: #ffffff;
+      --bg-sub: #f1ece4;
+      --bg-elevated: #e6dfd5;
+      --border-color: #dfd7cc;
+      --text-main: #1e293b;
+      --text-sub: #576574;
+      --text-muted: #8395a7;
+      --accent-amber: #d97706;
+      --accent-amber-bg: rgba(217, 119, 6, 0.14);
+      --accent-emerald: #059669;
+      --accent-emerald-bg: rgba(5, 150, 105, 0.13);
+      --accent-sky: #0284c7;
+      --accent-sky-bg: rgba(2, 132, 199, 0.13);
+      --accent-red: #dc2626;
+      --accent-red-bg: rgba(220, 38, 38, 0.13);
+      --svg-bg: #f6f2eb;
+      --svg-panel: #ffffff;
+      --svg-grid: #e2d9cc;
+      --svg-axis: #475569;
+      --bar-track: #e6dfd5;
+      --marker-line: rgba(30, 41, 59, 0.55);
+      --shadow-card: 0 8px 20px -4px rgba(120, 90, 60, 0.08);
+      --tuner-bg: rgba(255, 255, 255, 0.92);
+      color-scheme: light;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      transition: background-color 0.25s ease, color 0.25s ease;
+      overflow-x: hidden;
+      margin: 0;
+    }
+    .page-wrap {
+      padding-block: 12px 20px;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+    body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg-base); }
+    .src-link { color: var(--accent-sky); text-decoration: underline; text-underline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--accent-amber); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .stream-anim, .drip-anim, .laser-line-anim { animation: none; }
+      .bar-transition, .ruler-slide { transition: none; }
+    }
+
+    .mono-num {
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+
+    /* Theme-aware Surface Classes */
+    .t-card {
+      background-color: var(--bg-card);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-card);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+    .t-sub {
+      background-color: var(--bg-sub);
+      border-color: var(--border-color);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+    .t-elevated {
+      background-color: var(--bg-elevated);
+      border-color: var(--border-color);
+    }
+    .t-text-main { color: var(--text-main); }
+    .t-text-sub { color: var(--text-sub); }
+    .t-text-muted { color: var(--text-muted); }
+    .t-border { border-color: var(--border-color); }
+
+    .t-amber { color: var(--accent-amber); }
+    .t-emerald { color: var(--accent-emerald); }
+    .t-sky { color: var(--accent-sky); }
+    .t-red { color: var(--accent-red); }
+
+    .t-badge-amber {
+      color: var(--accent-amber);
+      background-color: var(--accent-amber-bg);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+    }
+    .t-badge-emerald {
+      color: var(--accent-emerald);
+      background-color: var(--accent-emerald-bg);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .t-badge-sky {
+      color: var(--accent-sky);
+      background-color: var(--accent-sky-bg);
+      border: 1px solid rgba(2, 132, 199, 0.35);
+    }
+    .t-badge-red {
+      color: var(--accent-red);
+      background-color: var(--accent-red-bg);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    /* Interactive Selector States */
+    .t-btn-idle {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .t-btn-idle:hover {
+      border-color: var(--accent-amber);
+    }
+    .t-btn-active {
+      background-color: var(--accent-amber-bg);
+      color: var(--text-main);
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 0 1px var(--accent-amber);
+    }
+    .t-btn-danger-active {
+      background-color: var(--accent-red-bg);
+      color: var(--text-main);
+      border-color: var(--accent-red);
+      box-shadow: 0 0 0 1px var(--accent-red);
+    }
+
+    input[type=range] {
+      accent-color: var(--accent-amber);
+      height: 8px;
+      border-radius: 999px;
+      background-color: var(--bg-elevated);
+    }
+
+    .bar-track-bg {
+      background-color: var(--bar-track);
+      border-color: var(--border-color);
+    }
+    .bar-marker {
+      background-color: var(--marker-line);
+    }
+    .bar-transition {
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
+    }
+    .ruler-slide {
+      transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes streamPulse {
+      0%, 100% { opacity: 0.96; }
+      50% { opacity: 0.68; }
+    }
+    @keyframes dripFall {
+      0% { transform: translateY(0px); opacity: 1; }
+      100% { transform: translateY(18px); opacity: 0.15; }
+    }
+    @keyframes laserDash {
+      to { stroke-dashoffset: -16; }
+    }
+    .stream-anim { animation: streamPulse 1.1s infinite ease-in-out; }
+    .drip-anim { animation: dripFall 0.85s infinite linear; }
+    .laser-line-anim { animation: laserDash 1.15s linear infinite; }
+
+    /* Sticky Quick-Tuner Glassmorphism */
+    .sticky-tuner-bar {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background-color: var(--tuner-bg);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-card);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    /* Interactive Mini Pill Controls */
+    .mini-pill {
+      background-color: var(--bg-sub);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .mini-pill:hover {
+      border-color: var(--accent-amber);
+    }
+    .step-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      background-color: var(--bg-elevated);
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .step-btn:hover {
+      background-color: var(--accent-amber);
+      color: #0b0f19;
+    }
+    .step-btn:active {
+      transform: scale(0.92);
+    }
+
+    .bean-input {
+      width: 100%;
+      min-height: 36px;
+      font-size: 12px;
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 6px 10px;
+    }
+    .bean-input:focus { outline: none; border-color: var(--accent-amber); }
+
+    .no-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+    .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .no-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 99px; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="max-w-[1440px] mx-auto space-y-3">
+
+    <!-- 0. HEADER WITH LIGHT / DARK THEME TOGGLE -->
+    <header class="t-card border rounded-2xl px-4 py-3 flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 t-amber text-[11px] font-bold tracking-wider uppercase mb-0.5">
+          <span>A + B 跨裝置雙棲架構</span>
+          <span class="t-text-muted">|</span>
+          <span>置頂微型互動列 × 筆電左右分欄工作台 × 筒身刻度 <span class="mono-num">①～④</span></span>
+        </div>
+        <h1 class="text-lg sm:text-xl md:text-2xl font-black tracking-tight t-text-main">
+          愛樂壓 × Prismo 終極視覺化互動實驗室
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2">
+        <div class="flex flex-wrap items-center gap-2 text-[11px] t-text-sub t-sub border rounded-xl px-3 py-1.5">
+          <span id="headerGrind">中細研磨</span>
+          <span class="t-text-muted">•</span>
+          <span>Prismo + <span class="mono-num">1</span>張濾紙</span>
+          <span class="t-text-muted">•</span>
+          <span>AeroPress Clear・熱水補到 <strong class="t-amber mono-num">④圓圈上緣</strong></span>
+        </div>
+
+        <!-- Theme Switch Button -->
+        <button onclick="toggleTheme()" id="themeToggleBtn"
+          class="t-sub hover:border-amber-500 border px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shrink-0 min-h-[36px]">
+          <span id="themeToggleIcon">☀️</span>
+          <span id="themeToggleText" class="t-text-main">切換淺色晨光館</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 1. TOP BAR: CHAMPION-INSPIRED PRESETS & CUSTOM BOOKMARKS -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+
+      <!-- Left (7 cols): 3 champion-inspired presets, each with its real source -->
+      <div class="lg:col-span-7 t-card border rounded-2xl p-3 flex flex-col justify-between min-w-0">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+            <h2 class="text-xs sm:text-sm font-black t-text-main">
+              🏆 冠軍風格靈感配方（Prismo 正放改編）
+            </h2>
+            <span class="text-[10px] font-bold t-badge-amber px-2 py-0.5 rounded-full shrink-0">
+              點選載入參數
+            </span>
+          </div>
+          <p class="text-[10px] t-text-sub mb-2 leading-snug">
+            參考真實配方的方向改編，不是原版重現。冠軍配方多用反壓，本工具固定 Prismo 正放、熱水補到④圓圈上緣，濃度與口感會跟原版不同。點選後下方會列出原版參數與出處。
+          </p>
+
+          <div class="flex md:grid md:grid-cols-3 gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button onclick="applyChampionPreset('hoffmann')" id="champ_hoffmann"
+              class="champ-btn shrink-0 w-[230px] md:w-auto min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-black t-badge-emerald px-1.5 py-0.5 rounded">Hoffmann 風格</span>
+                <span class="mono-num text-[11px] font-bold t-amber">94.6°C</span>
+              </div>
+              <div class="font-bold t-text-main text-xs mt-1 truncate">沸水長浸、輕壓</div>
+              <div class="text-[10px] t-text-sub mt-0.5 mono-num">
+                1人(15g)・淺焙・水滾直接倒・泡150s・①自然沉
+              </div>
+            </button>
+
+            <button onclick="applyChampionPreset('wac2019')" id="champ_wac2019"
+              class="champ-btn shrink-0 w-[230px] md:w-auto min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-black t-badge-amber px-1.5 py-0.5 rounded">2019 WAC 冠軍風格</span>
+                <span class="mono-num text-[11px] font-bold t-amber">91.7°C</span>
+              </div>
+              <div class="font-bold t-text-main text-xs mt-1 truncate">高粉量、短浸泡、壓後兌水</div>
+              <div class="text-[10px] t-text-sub mt-0.5 mono-num">
+                2人(30g)・中淺焙・滾後等30s・泡40s・②穩推
+              </div>
+            </button>
+
+            <button onclick="applyChampionPreset('wac2021')" id="champ_wac2021"
+              class="champ-btn shrink-0 w-[230px] md:w-auto min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-black t-badge-sky px-1.5 py-0.5 rounded">2021 WAC 冠軍風格</span>
+                <span class="mono-num text-[11px] font-bold t-sky">80.1°C</span>
+              </div>
+              <div class="font-bold t-text-main text-xs mt-1 truncate">80°C 低溫萃取</div>
+              <div class="text-[10px] t-text-sub mt-0.5 mono-num">
+                1人(15g)・淺焙・滾後等4分鐘・泡60s・①自然沉
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div id="champNoteBanner" class="hidden mt-2 t-sub border px-3 py-2 rounded-xl text-[11px]">
+          <div id="champNoteText" class="leading-relaxed t-text-main space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- Right (5 cols): ⭐ Custom Saved Presets -->
+      <div class="lg:col-span-5 t-card border rounded-2xl p-3 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs sm:text-sm font-black t-text-main flex items-center gap-2">
+              <span class="t-sub t-amber w-5 h-5 rounded-md inline-flex items-center justify-center text-[11px] border">
+                </span>
+              ⭐ 我的專屬配方書籤 (自動記憶)
+            </h2>
+            <div class="flex items-center gap-2">
+              <span id="savedCountBadge" class="mono-num text-[10px] t-text-sub">已存 0 組</span>
+              <button onclick="resetDefaultSaved()" class="text-[10px] t-text-sub hover:underline cursor-pointer">重置預設</button>
+            </div>
+          </div>
+
+          <div class="flex gap-1.5 mb-2">
+            <input type="text" id="customRecipeName" placeholder="輸入配方名稱（如：衣索比亞日曬・2人冰鎮）" maxlength="24"
+              class="flex-1 text-xs t-sub border t-text-main rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500">
+            <button onclick="saveCurrentRecipe()"
+              class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black px-3 py-1.5 rounded-xl transition-all shrink-0 shadow flex items-center gap-1 cursor-pointer min-h-[34px]">
+              儲存組合
+            </button>
+          </div>
+
+          <div id="savedRecipesList" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 【作法 A】STICKY INTERACTIVE QUICK-TUNER BAR (置頂吸附微型互動控制列 - 永遠可直接微調!) -->
+    <nav class="sticky-tuner-bar border rounded-2xl px-3 py-2">
+      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+        
+        <!-- Left Interactive Quick-Pills Group -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          
+          <span class="hidden xl:inline-flex items-center gap-1 text-[11px] font-black t-amber px-2 py-1 rounded-lg t-badge-amber shrink-0">
+            微型速調
+          </span>
+
+          <!-- Pill 1: ☕ Roast Quick Selector -->
+          <div class="mini-pill px-2 gap-1" title="直接切換烘焙度（自動連動建議刻度與時間）">
+            <span class="text-xs">☕</span>
+            <select id="miniRoastSelect" onchange="selectRoast(parseInt(this.value, 10))"
+              class="bg-transparent text-xs font-black t-text-main focus:outline-none cursor-pointer pr-1">
+              <option value="1" class="bg-slate-900 text-white">1.淺焙</option>
+              <option value="2" class="bg-slate-900 text-white" selected>2.中淺焙</option>
+              <option value="3" class="bg-slate-900 text-white">3.中焙</option>
+              <option value="4" class="bg-slate-900 text-white">4.中深焙</option>
+              <option value="5" class="bg-slate-900 text-white">5.深焙</option>
+            </select>
+          </div>
+
+          <!-- Pill 2: 👥 Servings Segmented Buttons -->
+          <div class="mini-pill p-1 gap-0.5" title="直接切換沖煮份數規模">
+            <button type="button" onclick="selectServings(1)" id="miniServ_1"
+              class="px-2 py-1 rounded-lg text-[11px] font-black mono-num transition-all cursor-pointer">1人</button>
+            <button type="button" onclick="selectServings(2)" id="miniServ_2"
+              class="px-2 py-1 rounded-lg text-[11px] font-black mono-num transition-all cursor-pointer">2人</button>
+            <button type="button" onclick="selectServings(4)" id="miniServ_4"
+              class="px-2 py-1 rounded-lg text-[11px] font-black mono-num transition-all cursor-pointer">4人</button>
+          </div>
+
+          <!-- Pill 3: wait after boil stepper -->
+          <div class="mini-pill px-1.5 gap-1.5" title="水滾後等幾秒再倒（每按一下 ±15 秒）">
+            <button type="button" onclick="stepWait(-15)" class="step-btn text-xs" title="少等 15 秒（水溫較高）">－</button>
+            <div class="text-center px-0.5">
+              <div class="text-[9px] t-text-sub leading-none">🫖水滾後等</div>
+              <div id="miniColdVal" class="mono-num text-xs font-black t-sky leading-tight">30s (≈91.6°C)</div>
+            </div>
+            <button type="button" onclick="stepWait(15)" class="step-btn text-xs" title="多等 15 秒（水溫較低）">＋</button>
+          </div>
+
+          <!-- Pill 4: ⏳ Steep Time Stepper [-][120s][+] -->
+          <div class="mini-pill px-1.5 gap-1.5" title="微調步驟2靜置浸泡秒數 (每按一下 ±5秒)">
+            <button type="button" onclick="stepSteepTime(-5)" class="step-btn text-xs" title="縮短 5 秒">－</button>
+            <div class="text-center px-0.5">
+              <div class="text-[9px] t-text-sub leading-none">⏳浸泡</div>
+              <div id="miniSteepVal" class="mono-num text-xs font-black t-amber leading-tight">120s (攪8)</div>
+            </div>
+            <button type="button" onclick="stepSteepTime(5)" class="step-btn text-xs" title="延長 5 秒">＋</button>
+          </div>
+
+          <!-- Pill 5A: 📐 Table Height Quick Selector -->
+          <div class="mini-pill px-2 gap-1" title="切換桌面相對於身體的高度區間">
+            <select id="miniZoneSelect" onchange="selectTableZone(parseInt(this.value, 10))"
+              class="bg-transparent text-xs font-bold t-text-main focus:outline-none cursor-pointer">
+              <option value="1" class="bg-slate-900 text-white">🟢偏低桌(肚臍)</option>
+              <option value="2" class="bg-slate-900 text-white" selected>🔵標準桌(肋骨)</option>
+              <option value="3" class="bg-slate-900 text-white">🟠坐姿/高桌(胸口)</option>
+            </select>
+          </div>
+
+          <!-- Pill 5B: 🤚 Press Style Quick Selector -->
+          <div class="mini-pill px-2 gap-1" title="切換下壓體感手勢">
+            <select id="miniPressSelect" onchange="selectPressStyle(parseInt(this.value, 10))"
+              class="bg-transparent text-xs font-black t-emerald focus:outline-none cursor-pointer mono-num">
+              <option value="1" class="bg-slate-900 text-white">①自然沉 (~7.5kg)</option>
+              <option value="2" class="bg-slate-900 text-white" selected>②手掌穩推 (~11kg)</option>
+              <option value="3" class="bg-slate-900 text-white">③前臂快推 (~16kg)</option>
+              <option value="4" class="bg-slate-900 text-white">④全身硬壓❌ (>20kg)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Right: Collapse / Expand Full STEP 1~3 Panel Button -->
+        <button type="button" onclick="toggleParamDeck()" id="btnToggleParamDeck"
+          class="shrink-0 t-badge-amber hover:bg-amber-500 hover:text-slate-950 px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shadow-sm min-h-[36px]">
+          <span id="txtToggleParamDeck">🔼 收合設定面板</span>
+        </button>
+
+      </div>
+
+      <!-- Compact Single-Line SOP & Bypass Strip (Shown inside sticky bar when full panel is collapsed) -->
+      <div id="stickySopMiniStrip" class="hidden mt-1.5 pt-1.5 border-t t-border flex flex-wrap items-center justify-between gap-2 text-[11px]">
+        <div class="flex items-center gap-1.5 t-text-sub truncate">
+          <span id="stickySopBadge" class="t-badge-amber px-1.5 py-0.5 rounded font-black text-[10px] shrink-0">2人份：先粉後水＋兌水</span>
+          <span id="stickySopText" class="t-text-main truncate"></span>
+        </div>
+        <span id="stickyBypassBadge" class="mono-num font-black t-amber shrink-0">🫗 壓後兌 1 管（到④上緣）</span>
+      </div>
+    </nav>
+
+    <!-- 3. 【作法 B】MAIN WORKSPACE: DESKTOP SPLIT-VIEW (Left 5 cols Controls | Right 7 cols Sticky Charts) -->
+    <div id="mainWorkspaceGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">
+
+      <!-- ================= LEFT COLUMN (5/12 on Desktop): FULL STEP 1~3 & PLAN B SUB-DRAWER ================= -->
+      <section id="leftControlColumn" class="lg:col-span-5 t-card border rounded-2xl p-3.5 sm:p-4 space-y-3.5 transition-all">
+        
+        <div class="flex items-center justify-between border-b t-border pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-slate-950 w-6 h-6 rounded-lg inline-flex items-center justify-center text-xs font-black shadow">
+              </span>
+            <div>
+              <h2 class="text-sm font-black t-text-main leading-tight">
+                完整沖煮參數與防結塊 SOP (<span class="mono-num">STEP 1～3</span>)
+              </h2>
+              <p class="text-[10px] t-text-sub">
+                筆電左控右看免滾動・手機可收合此區直接用頂部置頂列微調
+              </p>
+            </div>
+          </div>
+          <button type="button" onclick="toggleParamDeck()"
+            class="text-[11px] font-bold t-text-sub hover:text-amber-500 cursor-pointer px-2 py-1 rounded-lg t-sub border">
+            隱藏面板 ✕
+          </button>
+        </div>
+
+        <!-- STEP 1: Roast Level (5) × Serving Scale (3) + Dynamic SOP Strip -->
+        <div class="t-sub border rounded-xl p-3 space-y-2.5">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-black uppercase tracking-wider t-amber">
+                STEP 1A. 咖啡豆烘焙度 (五段連動)
+              </label>
+              <span class="text-[10px] t-text-sub">點擊自動載入建議刻度</span>
+            </div>
+            <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-3 xl:grid-cols-5 gap-1.5">
+              <button onclick="selectRoast(1)" data-roast="1" class="roast-btn min-h-[44px] py-1 px-1.5 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer">
+                <span class="mono-num">1.</span>淺焙<br><span class="text-[10px] font-normal opacity-80">花果酸香</span>
+              </button>
+              <button onclick="selectRoast(2)" data-roast="2" class="roast-btn min-h-[44px] py-1 px-1.5 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer">
+                <span class="mono-num">2.</span>中淺焙<br><span class="text-[10px] font-normal opacity-80">柑橘焦糖</span>
+              </button>
+              <button onclick="selectRoast(3)" data-roast="3" class="roast-btn min-h-[44px] py-1 px-1.5 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer">
+                <span class="mono-num">3.</span>中焙<br><span class="text-[10px] font-normal opacity-80">堅果平衡</span>
+              </button>
+              <button onclick="selectRoast(4)" data-roast="4" class="roast-btn min-h-[44px] py-1 px-1.5 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer">
+                <span class="mono-num">4.</span>中深焙<br><span class="text-[10px] font-normal opacity-80">可可奶油</span>
+              </button>
+              <button onclick="selectRoast(5)" data-roast="5" class="roast-btn min-h-[44px] py-1 px-1.5 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer col-span-2 sm:col-span-1 lg:col-span-2 xl:col-span-1">
+                <span class="mono-num">5.</span>深焙<br><span class="text-[10px] font-normal opacity-80">濃郁不苦</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-black uppercase tracking-wider t-amber block mb-1.5">
+              STEP 1B. 沖煮份數規模 (連動防結塊順序與兌水)
+            </label>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button onclick="selectServings(1)" data-servings="1" class="serving-btn min-h-[46px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="font-bold text-xs"><span class="mono-num">1</span> 人直沖</div>
+                <div class="text-[10px] opacity-80 mono-num">1匙(15g)・免兌水</div>
+              </button>
+              <button onclick="selectServings(2)" data-servings="2" class="serving-btn min-h-[46px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="font-bold text-xs"><span class="mono-num">2</span> 人 Bypass</div>
+                <div class="text-[10px] opacity-80 mono-num">2匙(30g)・兌1管④</div>
+              </button>
+              <button onclick="selectServings(4)" data-servings="4" class="serving-btn min-h-[46px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="font-bold text-xs"><span class="mono-num">4</span> 人 Bypass</div>
+                <div class="text-[10px] opacity-80 mono-num">近4匙(55g)・兌3管</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Anti-Clumping Pouring Order SOP -->
+          <div class="t-card border rounded-xl p-2.5 space-y-1">
+            <div class="flex items-center justify-between">
+              <span id="sopBadge" class="text-[10px] font-black t-badge-amber px-2 py-0.5 rounded">
+                2人份：先粉後水＋兌水
+              </span>
+              <span class="text-[10px] t-text-sub mono-num">防結塊標準流程</span>
+            </div>
+            <div id="sopInlineSteps" class="text-xs t-text-main leading-relaxed"></div>
+          </div>
+        </div>
+
+        <!-- STEP 1C: Bean info + grind record (saved with bookmarks) -->
+        <div class="t-sub border rounded-xl p-3 space-y-2.5" id="beanPanel">
+          <div class="flex items-center justify-between gap-2">
+            <label class="text-xs font-black uppercase tracking-wider t-amber">
+              STEP 1C. 豆子與研磨記錄
+            </label>
+            <span class="text-[10px] t-text-sub text-right">烘焙度沿用 1A・隨書籤一起儲存</span>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-bold t-text-main mb-1">研磨方式</div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" onclick="setGrindMode('self')" data-grindmode="self" class="grindmode-btn min-h-[40px] p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer">✋ 自己磨</button>
+              <button type="button" onclick="setGrindMode('shop')" data-grindmode="shop" class="grindmode-btn min-h-[40px] p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer">🏪 請店家磨</button>
+            </div>
+
+            <div id="grindSelfRow" class="grid grid-cols-2 gap-1.5 mt-1.5">
+              <label class="block">
+                <span class="text-[10px] t-text-sub">手磨格數</span>
+                <input id="beanClicks" type="number" inputmode="numeric" min="0" max="200" step="1" placeholder="如 18" oninput="onBeanChange()" class="bean-input mono-num">
+              </label>
+              <label class="block">
+                <span class="text-[10px] t-text-sub">磨豆機（格數因機而異）</span>
+                <input id="beanGrinder" type="text" maxlength="24" placeholder="機型名稱" oninput="onBeanChange()" class="bean-input">
+              </label>
+            </div>
+
+            <div id="grindShopRow" class="hidden mt-1.5">
+              <label class="block">
+                <span class="text-[10px] t-text-sub">請店家磨成什麼粗細</span>
+                <input id="beanShopGrind" type="text" maxlength="24" placeholder="如 中細、愛樂壓用" oninput="onBeanChange()" class="bean-input">
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5">
+            <label class="block">
+              <span class="text-[10px] t-text-sub">種類</span>
+              <select id="beanBlend" onchange="onBeanChange()" class="bean-input">
+                <option value="">未選</option>
+                <option value="單品豆">單品豆</option>
+                <option value="配方豆">配方豆</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-[10px] t-text-sub">處理法</span>
+              <select id="beanProcess" onchange="onBeanChange()" class="bean-input">
+                <option value="">未選</option>
+                <option value="水洗">水洗</option>
+                <option value="日曬">日曬</option>
+                <option value="蜜處理">蜜處理</option>
+                <option value="厭氧發酵">厭氧發酵</option>
+                <option value="其他">其他</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-[10px] t-text-sub">品種</span>
+              <input id="beanVariety" type="text" maxlength="24" placeholder="如 藝伎、波旁" oninput="onBeanChange()" class="bean-input">
+            </label>
+            <label class="block">
+              <span class="text-[10px] t-text-sub">產區</span>
+              <input id="beanOrigin" type="text" maxlength="24" placeholder="如 衣索比亞 耶加雪菲" oninput="onBeanChange()" class="bean-input">
+            </label>
+            <label class="block">
+              <span class="text-[10px] t-text-sub">購買對象</span>
+              <input id="beanSource" type="text" maxlength="24" placeholder="店名或網購平台" oninput="onBeanChange()" class="bean-input">
+            </label>
+            <label class="block">
+              <span class="text-[10px] t-text-sub">烘焙日期</span>
+              <input id="beanRoastDate" type="date" onchange="onBeanChange()" oninput="onBeanChange()" class="bean-input mono-num">
+            </label>
+          </div>
+
+          <div class="t-card border rounded-xl p-2.5 flex items-start justify-between gap-2">
+            <div id="beanSummary" class="text-[11px] t-text-main leading-snug"></div>
+            <button type="button" onclick="clearBean()" class="shrink-0 text-[10px] t-text-sub hover:underline cursor-pointer">清除</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Room-Temp Water Grid Slider & Steep Time Slider -->
+        <div class="t-sub border rounded-xl p-3 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-black uppercase tracking-wider t-amber">
+              STEP 2. 水溫（水滾後等待）× 浸泡秒數
+            </label>
+            <span class="text-[10px] t-text-sub">與頂部 [－][＋] 同步</span>
+          </div>
+
+          <!-- Slider 1: wait after boil (controls water temperature without tools) -->
+          <div class="t-card p-2.5 rounded-xl border">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold t-text-main">
+                步驟 1 水滾後等多久再倒
+              </span>
+              <span id="coldWaterLabel" class="mono-num text-xs font-black t-badge-sky px-2 py-0.5 rounded-lg">
+                等 30 秒
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-[11px] t-text-sub mb-1.5">
+              <span id="inlineMixTempHint">估算入筒水溫：<strong class="t-amber mono-num">91.6°C</strong></span>
+              <span id="inlineWaterVolHint" class="t-sky mono-num">倒水時約 96°C</span>
+            </div>
+            <input type="range" id="coldWaterSlider" min="0" max="300" step="15" value="30" oninput="onSliderChange()" class="w-full cursor-pointer" aria-label="水滾後等待秒數">
+            <div class="flex justify-between text-[10px] t-text-muted mono-num mt-1">
+              <span>0s(剛滾)</span>
+              <span>1分</span>
+              <span>2分</span>
+              <span>3分</span>
+              <span>5分</span>
+            </div>
+            <p class="text-[10px] t-text-sub mt-1.5 leading-snug">
+              水溫參考：淺焙接近沸騰，中焙 90–95°C，深焙 85–90°C（<a class="src-link" href="https://aeroprecipe.com/recipes/james-hoffmann-aeropress-recipe" target="_blank" rel="noopener">AeroPrecipe 附註</a>）。點烘焙度會自動帶入等待秒數。
+            </p>
+            <p class="text-[10px] t-text-sub mt-1 leading-snug">
+              等待秒數換算水溫是粗估，以電熱水壺開蓋放著為準；水量少、壺小會降得比較快。誤差交給下方的口感回饋校正。
+            </p>
+          </div>
+
+          <!-- Slider 2: Steep Time -->
+          <div class="t-card p-2.5 rounded-xl border">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-bold t-text-main">
+                步驟 2 靜置浸泡時間
+              </span>
+              <span id="steepTimeLabel" class="mono-num text-xs font-black t-badge-amber px-2 py-0.5 rounded-lg">
+                120s (攪拌 8 下)
+              </span>
+            </div>
+            <input type="range" id="steepTimeSlider" min="40" max="180" step="5" value="120" oninput="onSliderChange()" class="w-full cursor-pointer">
+            <div class="flex justify-between text-[10px] t-text-muted mono-num mt-1">
+              <span>40s(深焙)</span>
+              <span>90s(中焙)</span>
+              <span>135s(中淺)</span>
+              <span>180s(淺焙)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Ergonomic Table Height × 4 Tactile Gestures + Plan B Internal Sub-Drawer -->
+        <div class="t-sub border rounded-xl p-3 space-y-2.5">
+          
+          <div>
+            <label class="text-xs font-black uppercase tracking-wider t-amber block mb-1.5">
+              STEP 3A. 桌面相對於身體高度 (壓筒總高 <span class="mono-num">+30cm</span> 對齊哪裡)
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-1.5">
+              <button onclick="selectTableZone(1)" data-zone="1" class="zone-btn min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black t-text-main">🟢 偏低桌面</span>
+                  <span class="text-[9px] font-bold t-badge-emerald px-1.5 py-0.5 rounded">省力甜區</span>
+                </div>
+                <div class="text-[10px] t-text-sub mt-0.5">頂蓋對齊<strong class="t-sky">【肚臍】</strong></div>
+              </button>
+
+              <button onclick="selectTableZone(2)" data-zone="2" class="zone-btn min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black t-text-main">🔵 標準流理台</span>
+                  <span class="text-[9px] font-bold t-badge-sky px-1.5 py-0.5 rounded">標準90°</span>
+                </div>
+                <div class="text-[10px] t-text-sub mt-0.5">頂蓋對齊<strong class="t-sky">【肋骨下緣】</strong></div>
+              </button>
+
+              <button onclick="selectTableZone(3)" data-zone="3" class="zone-btn min-h-[48px] p-2 rounded-xl border text-left transition-all cursor-pointer">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black t-text-main">🟠 坐姿/高吧台</span>
+                  <span class="text-[9px] font-bold t-badge-amber px-1.5 py-0.5 rounded">拉單槓法</span>
+                </div>
+                <div class="text-[10px] t-text-sub mt-0.5">頂蓋對齊<strong class="t-amber">【胸口鎖骨】</strong></div>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-black uppercase tracking-wider t-amber block mb-1.5">
+              STEP 3B. 下壓體感手勢與目標水柱 (2×2 網格)
+            </label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button onclick="selectPressStyle(1)" data-press="1" class="press-btn min-h-[68px] p-2 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="text-xs font-black t-text-main">① 雙手自然沉</span>
+                    <span class="mono-num text-[9px] font-bold t-badge-sky px-1 py-0.5 rounded">~7.5kg</span>
+                  </div>
+                  <div class="text-[10px] t-text-sub mt-0.5">細如筆芯單水柱</div>
+                </div>
+                <div class="mono-num text-[10px] font-bold t-sky mt-1" id="gcard_sec_1">1人~37s｜2人~44s｜4人~56s</div>
+              </button>
+
+              <button onclick="selectPressStyle(2)" data-press="2" class="press-btn min-h-[68px] p-2 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="text-xs font-black t-text-main">② 手掌微出力</span>
+                    <span class="mono-num text-[9px] font-bold t-badge-emerald px-1 py-0.5 rounded">~11kg</span>
+                  </div>
+                  <div class="text-[10px] t-text-sub mt-0.5">竹筷粗筆直水柱</div>
+                </div>
+                <div class="mono-num text-[10px] font-bold t-emerald mt-1" id="gcard_sec_2">1人~26s｜2人~31s｜4人~40s</div>
+              </button>
+
+              <button onclick="selectPressStyle(3)" data-press="3" class="press-btn min-h-[68px] p-2 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="text-xs font-black t-text-main">③ 前臂快推</span>
+                    <span class="mono-num text-[9px] font-bold t-badge-amber px-1 py-0.5 rounded">~16kg</span>
+                  </div>
+                  <div class="text-[10px] t-text-sub mt-0.5">粗水柱帶金黃油脂</div>
+                </div>
+                <div class="mono-num text-[10px] font-bold t-amber mt-1" id="gcard_sec_3">1人~19s｜2人~23s｜4人~29s</div>
+              </button>
+
+              <button onclick="selectPressStyle(4)" data-press="4" class="press-btn min-h-[68px] p-2 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="text-xs font-black t-text-main">④ 全身硬壓 ❌</span>
+                    <span class="mono-num text-[9px] font-bold t-badge-red px-1 py-0.5 rounded">>20kg</span>
+                  </div>
+                  <div class="text-[10px] t-text-sub mt-0.5">5秒壓死變滴水</div>
+                </div>
+                <div class="mono-num text-[10px] font-bold t-red mt-1" id="gcard_sec_4">1人~44s｜2人~54s｜4人~68s</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Plan B Sub-drawer Trigger Bar -->
+          <div class="t-card border rounded-xl p-2.5 space-y-2">
+            <div class="text-[11px] t-text-main leading-snug" id="liveErgoStreamSummary"></div>
+            <button type="button" onclick="toggleEngSubDrawer()" id="btnToggleEngSubDrawer"
+              class="w-full t-badge-sky hover:bg-sky-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer min-h-[34px]">
+              <span id="txtToggleEngSubDrawer">🔍 展開「工程剖面 × 雷射基準線 × 動態座標尺」圖解 ▾</span>
+            </button>
+          </div>
+
+          <!-- PLAN B INTERNAL SUB-DRAWER: Engineering Cross-Section & Laser Alignment Diagram -->
+          <div id="engSubDrawerBody" class="hidden pt-2.5 border-t t-border space-y-2.5">
+            <div class="t-card rounded-xl border p-1.5 overflow-hidden">
+              <svg viewBox="0 0 600 340" class="w-full h-auto block select-none" id="anatomySvg">
+                <defs>
+                  <pattern id="cadGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path id="svgCadGridPath" d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.8" opacity="0.7"/>
+                  </pattern>
+                  <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="1.8" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <rect id="svgAnatomyBg" x="0" y="0" width="600" height="340" rx="8" fill="#0b0f19" />
+                <rect x="0" y="0" width="600" height="340" rx="8" fill="url(#cadGrid)" />
+
+                <rect id="svgHeaderBoxL" x="10" y="8" width="190" height="22" rx="5" fill="#111827" stroke="#334155" stroke-width="1"/>
+                <text id="svgHeaderTxtL" x="105" y="23" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-weight="bold">▲ 人體軀幹動態滑動座標尺</text>
+
+                <rect id="svgHeaderBoxR" x="212" y="8" width="378" height="22" rx="5" fill="#111827" stroke="#334155" stroke-width="1"/>
+                <text id="svgHeaderTxtR" x="401" y="23" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-weight="bold">▼ 愛樂壓 × Prismo 工程剖面與雷射對齊 (+30cm)</text>
+
+                <clipPath id="rulerClip">
+                  <rect x="8" y="34" width="196" height="298" rx="6" />
+                </clipPath>
+
+                <g clip-path="url(#rulerClip)">
+                  <rect id="svgRulerWellBg" x="10" y="36" width="188" height="294" rx="8" fill="#0b0f19" opacity="0.9" stroke="#1e293b" stroke-width="1"/>
+                  <line id="svgRulerSpine" x1="182" y1="36" x2="182" y2="330" stroke="#334155" stroke-width="2"/>
+
+                  <g id="svgSlidingRuler" class="ruler-slide" transform="translate(0, 5)">
+                    <g id="svgRulerTicks" stroke="#475569" stroke-width="1.2">
+                      <line x1="172" y1="-36" x2="182" y2="-36"/>
+                      <line x1="175" y1="-18" x2="182" y2="-18"/>
+                      <line x1="168" y1="0" x2="182" y2="0"/>
+                      <line x1="175" y1="18" x2="182" y2="18"/>
+                      <line x1="172" y1="36" x2="182" y2="36"/>
+                      <line x1="175" y1="54" x2="182" y2="54"/>
+                      <line x1="172" y1="72" x2="182" y2="72"/>
+                      <line x1="168" y1="90" x2="182" y2="90"/>
+                      <line x1="175" y1="108" x2="182" y2="108"/>
+                      <line x1="172" y1="126" x2="182" y2="126"/>
+                      <line x1="175" y1="144" x2="182" y2="144"/>
+                      <line x1="172" y1="162" x2="182" y2="162"/>
+                      <line x1="168" y1="180" x2="182" y2="180"/>
+                      <line x1="175" y1="198" x2="182" y2="198"/>
+                      <line x1="172" y1="216" x2="182" y2="216"/>
+                      <line x1="175" y1="234" x2="182" y2="234"/>
+                      <line x1="172" y1="252" x2="182" y2="252"/>
+                      <line x1="168" y1="270" x2="182" y2="270"/>
+                      <line x1="175" y1="288" x2="182" y2="288"/>
+                      <line x1="172" y1="306" x2="182" y2="306"/>
+                      <line x1="175" y1="324" x2="182" y2="324"/>
+                      <line x1="172" y1="342" x2="182" y2="342"/>
+                      <line x1="168" y1="360" x2="182" y2="360"/>
+                    </g>
+
+                    <g id="landmark_0" transform="translate(0, 0)">
+                      <rect id="lm_box_0" x="16" y="-14" width="148" height="28" rx="6" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+                      <text id="lm_txt_0" x="90" y="4" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold" class="mono-num">【鎖骨 / 胸口線】</text>
+                      <circle id="lm_dot_0" cx="182" cy="0" r="4" fill="#475569"/>
+                    </g>
+
+                    <g id="landmark_1" transform="translate(0, 90)">
+                      <rect id="lm_box_1" x="16" y="-14" width="148" height="28" rx="6" fill="#111827" stroke="#38bdf8" stroke-width="2"/>
+                      <text id="lm_txt_1" x="90" y="4" text-anchor="middle" fill="#38bdf8" font-size="11.5" font-weight="900" class="mono-num">【肋骨下緣線】</text>
+                      <circle id="lm_dot_1" cx="182" cy="0" r="5" fill="#38bdf8"/>
+                    </g>
+
+                    <g id="landmark_2" transform="translate(0, 180)">
+                      <rect id="lm_box_2" x="16" y="-14" width="148" height="28" rx="6" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+                      <text id="lm_txt_2" x="90" y="4" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold" class="mono-num">【肚臍 / 小腹線】</text>
+                      <circle id="lm_dot_2" cx="182" cy="0" r="4" fill="#475569"/>
+                    </g>
+
+                    <g id="landmark_3" transform="translate(0, 270)">
+                      <rect id="lm_box_3" x="16" y="-14" width="148" height="28" rx="6" fill="#111827" stroke="#94a3b8" stroke-width="1.8"/>
+                      <text id="lm_txt_3" x="90" y="4" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold" class="mono-num">【骨盆 / 腰帶線】</text>
+                      <circle id="lm_dot_3" cx="182" cy="0" r="4.5" fill="#94a3b8"/>
+                    </g>
+
+                    <g id="landmark_4" transform="translate(0, 360)">
+                      <rect id="lm_box_4" x="16" y="-14" width="148" height="28" rx="6" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+                      <text id="lm_txt_4" x="90" y="4" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold" class="mono-num">【大腿根部線】</text>
+                      <circle id="lm_dot_4" cx="182" cy="0" r="4" fill="#475569"/>
+                    </g>
+                  </g>
+                </g>
+
+                <g id="svgTopLaserGroup">
+                  <line id="svgTopLaserLine" class="laser-line-anim" x1="182" y1="95" x2="340" y2="95" stroke="#38bdf8" stroke-width="2.2" stroke-dasharray="5 3" filter="url(#laserGlow)"/>
+                  <circle id="svgTopLaserDotL" cx="182" cy="95" r="5" fill="#38bdf8"/>
+                  <polygon id="svgTopLaserArrow" points="340,95 331,90 331,100" fill="#38bdf8"/>
+                  <rect id="svgTopAlignBadgeBg" x="192" y="70" width="142" height="19" rx="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="1.2"/>
+                  <text id="svgTopAlignBadgeTxt" x="263" y="83" text-anchor="middle" fill="#38bdf8" font-size="9.5" font-weight="bold" class="mono-num">◄ 壓筒頂蓋對齊基準線</text>
+                </g>
+
+                <g id="svgBotLaserGroup">
+                  <line id="svgBotLaserLine" x1="182" y1="275" x2="575" y2="275" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+                  <circle cx="182" cy="275" r="4.5" fill="#64748b"/>
+                  <rect id="svgBotAlignBadgeBg" x="192" y="280" width="142" height="19" rx="4" fill="#0b0f19" stroke="#64748b" stroke-width="1"/>
+                  <text id="svgBotAlignBadgeTxt" x="263" y="293" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-weight="bold" class="mono-num">◄ 桌面對齊：骨盆/腰帶</text>
+                </g>
+
+                <g stroke="#64748b" stroke-width="1.2">
+                  <line x1="552" y1="95" x2="564" y2="95"/>
+                  <line x1="558" y1="95" x2="558" y2="275" stroke-dasharray="3 3"/>
+                  <line x1="552" y1="275" x2="564" y2="275"/>
+                </g>
+                <rect id="svgDimBox" x="526" y="168" width="58" height="34" rx="5" fill="#0b0f19" stroke="#334155" stroke-width="1"/>
+                <text id="svgDimLabel" x="555" y="182" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="bold">總架高</text>
+                <text x="555" y="195" text-anchor="middle" fill="#d97706" font-size="10.5" font-weight="900" class="mono-num">+30cm</text>
+
+                <g id="svgForceGaugeGroup">
+                  <rect id="svgForceBox" x="305" y="36" width="210" height="36" rx="7" fill="#0b0f19" stroke="#10b981" stroke-width="1.8"/>
+                  <text id="svgForceTitle" x="410" y="51" text-anchor="middle" fill="#10b981" font-size="10.5" font-weight="900" class="mono-num">② 手掌微出力穩推 (~11kg)</text>
+                  <text id="svgErgoSubTitle" x="410" y="65" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-weight="600">前臂90°水平・手肘貼肋骨穩推</text>
+                  <g id="svgVectorArrows" stroke="#10b981" stroke-width="2.6" fill="none" stroke-linecap="round"></g>
+                </g>
+
+                <g id="svgPlungerGroup">
+                  <rect id="svgPlungerTopBar" x="345" y="91" width="130" height="8" rx="4" fill="#cbd5e1" stroke="#38bdf8" stroke-width="1.5"/>
+                  <rect x="382" y="99" width="56" height="42" fill="#64748b" opacity="0.78"/>
+                  <rect x="366" y="140" width="88" height="12" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5"/>
+                </g>
+
+                <rect id="svgChamberWall" x="364" y="118" width="92" height="106" fill="rgba(148,163,184,0.12)" stroke="#64748b" stroke-width="2" rx="4"/>
+                <rect id="svgHotLiquid" x="366" y="152" width="88" height="36" fill="rgba(217, 119, 6, 0.52)"/>
+                <rect id="svgColdLiquid" x="366" y="188" width="88" height="10" fill="rgba(2, 132, 199, 0.55)"/>
+                <text id="svgColdText" x="358" y="196" text-anchor="end" fill="#0284c7" font-size="9.5" font-weight="bold" class="mono-num"></text>
+
+                <rect id="svgCoffeeBed" x="366" y="198" width="88" height="26" fill="#652b0d" stroke="#b45309" stroke-width="1.2"/>
+                <g id="svgBedParticles"></g>
+                <text id="svgBedLabel" x="462" y="214" fill="#d97706" font-size="10" font-weight="bold" class="mono-num">粉餅微縮・85%</text>
+
+                <g font-size="9" font-weight="bold" class="mono-num">
+                  <circle cx="440" cy="134" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.1"/><text x="440" y="137" text-anchor="middle" fill="#f8fafc">4</text>
+                  <circle cx="440" cy="156" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.1"/><text x="440" y="159" text-anchor="middle" fill="#f8fafc">3</text>
+                  <circle cx="440" cy="178" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.1"/><text x="440" y="181" text-anchor="middle" fill="#f8fafc">2</text>
+                  <circle cx="440" cy="200" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.1"/><text x="440" y="203" text-anchor="middle" fill="#f8fafc">1</text>
+                </g>
+
+                <rect x="354" y="224" width="112" height="12" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
+                <rect id="svgPrismoValve" x="402" y="230" width="16" height="6" rx="2" fill="#f59e0b"/>
+
+                <path d="M360,236 L352,274 L468,274 L460,236" fill="rgba(148, 163, 184, 0.16)" stroke="#64748b" stroke-width="1.8"/>
+                <path d="M354,263 L352,273 L468,273 L466,263 Z" fill="rgba(217, 119, 6, 0.48)"/>
+
+                <g id="svgStreamGroup">
+                  <rect id="svgMainStream" class="stream-anim" x="407.25" y="236" width="5.5" height="29" fill="#d97706" rx="2"/>
+                  <g id="svgStreamDrops"></g>
+                </g>
+                <text id="svgStreamLabel" x="410" y="318" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">Prismo 水柱：竹筷粗・筆直穩定單水柱</text>
+
+                <rect x="320" y="275" width="180" height="7" rx="3" fill="#475569" stroke="#64748b" stroke-width="1"/>
+              </svg>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div class="t-card border-l-4 border-l-sky-500 border p-2.5 rounded-r-xl">
+                <div class="font-bold t-text-main flex items-center justify-between gap-1">
+                  <span>① 頂蓋對齊</span>
+                  <span id="checkTagPosture" class="mono-num text-[10px] font-black t-sky">【肋骨下緣線】</span>
+                </div>
+                <p id="checkDescPosture" class="t-text-sub text-[10px] mt-1 leading-relaxed"></p>
+              </div>
+
+              <div class="t-card border-l-4 border-l-amber-500 border p-2.5 rounded-r-xl">
+                <div class="font-bold t-text-main flex items-center justify-between gap-1">
+                  <span>② 粉餅孔隙</span>
+                  <span id="checkTagBed" class="mono-num text-[10px] font-black t-amber">孔隙率 85%</span>
+                </div>
+                <p id="checkDescBed" class="t-text-sub text-[10px] mt-1 leading-relaxed"></p>
+              </div>
+
+              <div class="t-card border-l-4 border-l-emerald-500 border p-2.5 rounded-r-xl">
+                <div class="font-bold t-text-main flex items-center justify-between gap-1">
+                  <span>③ 水柱外觀</span>
+                  <span id="checkTagStream" class="mono-num text-[10px] font-black t-emerald">筆直標準水柱</span>
+                </div>
+                <p id="checkDescStream" class="t-text-sub text-[10px] mt-1 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= RIGHT COLUMN (7/12 on Desktop, 12/12 when Left Collapsed): STICKY LIVE DASHBOARD ================= -->
+      <div id="rightDashboardColumn" class="lg:col-span-7 lg:sticky lg:top-[68px] space-y-3.5 transition-all">
+
+        <!-- TOP HALF OF RIGHT STAGE: 📊 5D Flavor Chart + 4 Core KPI Cards -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-3.5 items-stretch">
+
+          <!-- 5D Flavor & Clarity Balance Chart (7/12 of Right Stage) -->
+          <div class="xl:col-span-7 t-card border-2 border-amber-500/50 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2.5">
+                <div>
+                  <div class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider t-badge-amber px-2 py-0.5 rounded mb-0.5">
+                    模型估算・非實測
+                  </div>
+                  <h2 class="text-sm sm:text-base font-black t-text-main">
+                    📊 五維度酸甜苦醇與乾淨度平衡圖 (<span class="mono-num">0–100%</span>)
+                  </h2>
+                </div>
+                <span class="mono-num text-[10px] font-bold t-badge-emerald px-2 py-0.5 rounded-lg">
+                  黃金帶：EY 18–22%
+                </span>
+              </div>
+
+              <div class="space-y-2.5 text-xs">
+                <!-- 1. Sweetness -->
+                <div>
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-bold t-text-main">🍯 焦糖甜感 (Sweetness) <span class="t-text-sub font-normal text-[10px]">— 標竿 85%</span></span>
+                    <span id="valSweetness" class="mono-num font-black t-amber text-sm">93%</span>
+                  </div>
+                  <div class="relative w-full h-3 bar-track-bg rounded-full overflow-hidden border">
+                    <div class="absolute top-0 bottom-0 left-[85%] w-0.5 bar-marker z-10" title="甜感參考線 (85%)"></div>
+                    <div id="barSweetness" class="h-full bg-amber-500 bar-transition rounded-full" style="width: 93%"></div>
+                  </div>
+                </div>
+
+                <!-- 2. Clarity -->
+                <div>
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-bold t-text-main">✨ 尾韻乾淨度 (Clarity) <span class="t-text-sub font-normal text-[10px]">— 無細粉通道澀感</span></span>
+                    <span id="valClarity" class="mono-num font-black t-sky text-sm">89%</span>
+                  </div>
+                  <div class="relative w-full h-3 bar-track-bg rounded-full overflow-hidden border">
+                    <div class="absolute top-0 bottom-0 left-[80%] w-0.5 bar-marker z-10" title="高乾淨度基準線 (80%)"></div>
+                    <div id="barClarity" class="h-full bg-sky-500 bar-transition rounded-full" style="width: 89%"></div>
+                  </div>
+                </div>
+
+                <!-- 3. Acidity -->
+                <div>
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-bold t-text-main">🍋 明亮果酸 (Acidity) <span class="t-text-sub font-normal text-[10px]">— 花果揚升感</span></span>
+                    <span id="valAcidity" class="mono-num font-black t-emerald text-sm">72%</span>
+                  </div>
+                  <div class="relative w-full h-3 bar-track-bg rounded-full overflow-hidden border">
+                    <div id="barAcidity" class="h-full bg-emerald-500 bar-transition rounded-full" style="width: 72%"></div>
+                  </div>
+                </div>
+
+                <!-- 4. Body -->
+                <div>
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-bold t-text-main">🍫 醇厚油脂感 (Body) <span class="t-text-sub font-normal text-[10px]">— 酒體飽滿度</span></span>
+                    <span id="valBody" class="mono-num font-black t-amber text-sm">70%</span>
+                  </div>
+                  <div class="relative w-full h-3 bar-track-bg rounded-full overflow-hidden border">
+                    <div id="barBody" class="h-full bg-amber-600 bar-transition rounded-full" style="width: 70%"></div>
+                  </div>
+                </div>
+
+                <!-- 5. Bitterness & Fines Risk -->
+                <div>
+                  <div class="flex justify-between items-center mb-0.5">
+                    <span class="font-bold t-text-main">⚠️ 苦韻與雜味風險 <span class="t-text-sub font-normal text-[10px]">— >55% 警戒</span></span>
+                    <span id="valBitterness" class="mono-num font-black t-red text-sm">28%</span>
+                  </div>
+                  <div class="relative w-full h-3 bar-track-bg rounded-full overflow-hidden border">
+                    <div class="absolute top-0 bottom-0 left-[55%] w-0.5 bg-red-500 z-10" title="苦澀警戒線 (55%)"></div>
+                    <div id="barBitterness" class="h-full bg-red-500 bar-transition rounded-full" style="width: 28%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="diagnosisBox" class="mt-3 p-2.5 rounded-xl t-sub border text-[11px] t-text-main leading-relaxed"></div>
+
+            <div class="mt-2.5 p-2.5 rounded-xl t-sub border space-y-2" id="tastePanel">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <span class="text-xs font-black t-text-main">👅 照目前參數沖完、喝起來如何？</span>
+                <span id="calibStatus" class="mono-num text-[10px] t-text-sub">尚未校正</span>
+              </div>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button type="button" id="tasteSour" onclick="submitTaste('sour')" class="min-h-[40px] px-2 py-1.5 rounded-xl border t-btn-idle text-xs font-bold cursor-pointer">🍋 偏酸、水水的</button>
+                <button type="button" id="tasteGood" onclick="submitTaste('good')" class="min-h-[40px] px-2 py-1.5 rounded-xl border t-btn-idle text-xs font-bold cursor-pointer">🍯 甜、剛好</button>
+                <button type="button" id="tasteBitter" onclick="submitTaste('bitter')" class="min-h-[40px] px-2 py-1.5 rounded-xl border t-btn-idle text-xs font-bold cursor-pointer">☕ 偏苦、澀口</button>
+              </div>
+              <div id="tasteFeedback" class="text-[10px] t-text-sub leading-snug">每次回饋會把萃取率估計往你的實際口感拉一點，記錄存在這台裝置的瀏覽器。換豆子或換磨豆機刻度時，建議重設。</div>
+              <div class="flex justify-end">
+                <button type="button" onclick="resetCalibration()" class="text-[10px] t-text-sub hover:underline cursor-pointer">重設校正</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2×2 Core KPI Metric Cards (5/12 of Right Stage) -->
+          <div class="xl:col-span-5 grid grid-cols-2 gap-2.5">
+            
+            <!-- KPI 1: Actual Mixed Water Temp -->
+            <div class="t-card p-3 rounded-2xl border flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 text-[11px] t-text-sub font-bold">
+                  <span>🌡️ 估算水溫</span>
+                  <span id="kpiTempTag" class="text-[9px] font-bold t-badge-amber px-1.5 py-0.5 rounded">黃金溫區</span>
+                </div>
+                <div id="kpiTemp" class="mono-num text-2xl font-black t-text-main mt-1">89.5°C</div>
+              </div>
+              <div class="mt-2 pt-1.5 border-t t-border text-[10px] t-text-sub mono-num" id="kpiWaterSplit">
+                水滾後等 30s・倒水時約 96°C
+              </div>
+            </div>
+
+            <!-- KPI 2: Post-Press Bypass Water Guide -->
+            <div class="t-card p-3 rounded-2xl border-2 border-amber-500/45 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 text-[11px] t-amber font-bold">
+                  <span>🫗 壓後兌水</span>
+                  <span class="text-[9px] t-badge-amber px-1.5 py-0.5 rounded font-bold">空筒量法</span>
+                </div>
+                <div id="kpiBypassTubes" class="mono-num text-lg sm:text-xl font-black t-amber mt-1">兌 1 管（到④上緣）</div>
+              </div>
+              <div class="mt-2 pt-1.5 border-t t-border text-[10px] t-text-sub mono-num" id="kpiBypassDetail">
+                原液 156mL + 兌水 250mL
+              </div>
+            </div>
+
+            <!-- KPI 3: Calibrated Estimated Press Seconds -->
+            <div class="t-card p-3 rounded-2xl border flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 text-[11px] t-text-sub font-bold">
+                  <span>⏱️ 預計下壓</span>
+                  <span id="kpiFlowRate" class="mono-num text-[9px] font-bold t-badge-sky px-1.5 py-0.5 rounded">5.0 mL/s</span>
+                </div>
+                <div id="kpiPressSec" class="mono-num text-2xl font-black t-text-main mt-1">31 秒</div>
+              </div>
+              <div id="kpiCakeStatus" class="mt-2 pt-1.5 border-t t-border text-[10px] font-bold t-emerald truncate">
+                粉餅微縮・孔隙85%
+              </div>
+            </div>
+
+            <!-- KPI 4: Extraction Yield (EY%) & TDS% -->
+            <div class="t-card p-3 rounded-2xl border flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 text-[11px] t-text-sub font-bold">
+                  <span>🎯 萃取率估計</span>
+                  <span id="kpiEYStatus" class="text-[9px] font-bold t-badge-emerald px-1.5 py-0.5 rounded">黃金甜感區</span>
+                </div>
+                <div id="kpiEY" class="mono-num text-xl font-black t-emerald mt-1">19–21%</div>
+              </div>
+              <div id="kpiTDS" class="mt-2 pt-1.5 border-t t-border text-[10px] t-text-sub mono-num truncate">
+                TDS 1.48%｜肋骨區
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM HALF OF RIGHT STAGE: 📈 0–70s INSTANTANEOUS FLOW DECAY & ZERO-DROP CURVE -->
+        <section class="t-card border rounded-2xl p-3.5 sm:p-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <div>
+              <div class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider t-badge-sky px-2 py-0.5 rounded mb-0.5">
+                電腦滑鼠 Hover & 手機手指 Touch 點按檢視 (<span class="mono-num">0 ～ 70s</span>)
+              </div>
+              <h3 class="text-sm sm:text-base font-black t-text-main">
+                📈 瞬時咖啡流速衰減與「聽到嘶聲壓完歸零」曲線 (<span class="mono-num">mL/s</span>)
+              </h3>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5 text-[11px] t-sub px-2.5 py-1.5 rounded-xl border shrink-0">
+              <span class="flex items-center gap-1 font-bold t-text-main">
+                <span id="legendCurveDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>當前手勢流速
+              </span>
+              <span class="flex items-center gap-1 t-text-sub">
+                <span class="w-3.5 h-0.5 border-b-2 border-dashed border-slate-500 inline-block"></span>② 標準穩推參考
+              </span>
+            </div>
+          </div>
+
+          <div class="w-full t-sub rounded-xl border p-2">
+            <svg id="flowChartSvg" viewBox="0 0 800 245" class="w-full h-[185px] sm:h-[225px] block overflow-visible select-none"></svg>
+          </div>
+
+          <div class="mt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] t-sub border px-3 py-2 rounded-xl">
+            <div id="flowCurveSummaryText" class="t-text-sub"></div>
+            <span id="flowHoverReadout" class="mono-num font-black t-badge-amber px-2 py-0.5 rounded-lg shrink-0 text-center">
+              👆 點按或滑過圓點查看各秒流速
+            </span>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'aeropress_prismo_plan_ab_final_v2';
+    const THEME_STORAGE_KEY = 'aeropress_prismo_theme_mode_v1';
+
+    let state = {
+      theme: 'dark',
+      roast: 2,
+      servings: 2,
+      waitSec: 30,
+      steepTime: 120,
+      tableHeightZone: 2,
+      pressStyle: 2,
+      activeChamp: null,
+      isParamCollapsed: false,
+      isEngSubExpanded: false,
+      bean: { grindMode: 'self', clicks: '', grinder: '', shopGrind: '', blend: '', variety: '', process: '', origin: '', source: '', roastDate: '' }
+    };
+
+    // Wait-after-boil defaults aim for roughly: light ~94°C, medium-light ~92°C, medium ~90°C, medium-dark ~88°C, dark ~86°C in the chamber
+    // (common guidance: light roast near boiling, medium 90–95°C, dark 85–90°C).
+    const roastPresets = {
+      1: { name: '淺焙', wait: 0, steep: { 1: 120, 2: 135, 4: 150 }, pressStyle: 1, stir: 10 },
+      2: { name: '中淺焙', wait: 30, steep: { 1: 105, 2: 120, 4: 135 }, pressStyle: 2, stir: 8 },
+      3: { name: '中焙', wait: 60, steep: { 1: 90, 2: 105, 4: 120 }, pressStyle: 2, stir: 6 },
+      4: { name: '中深焙', wait: 90, steep: { 1: 70, 2: 85, 4: 100 }, pressStyle: 2, stir: 5 },
+      5: { name: '深焙', wait: 120, steep: { 1: 55, 2: 65, 4: 80 }, pressStyle: 1, stir: 3 }
+    };
+
+    // Champion presets aligned with specifications (all default to standard table zone 2)
+    // Champion-inspired presets. "orig" is the published recipe; "adapt" explains what this tool changes.
+    const championPresets = {
+      hoffmann: {
+        roast: 1, servings: 1, waitSec: 0, steepTime: 150, tableHeightZone: 2, pressStyle: 1,
+        title: 'James Hoffmann「Ultimate AeroPress Technique」風格',
+        orig: '11g 粉、200mL 水、約 99°C，正放、紙濾、不預熱也不洗濾紙。注水後把活塞插入約 1cm 防滴，等 2 分鐘，輕輕旋轉壓筒，再等 30 秒後輕壓。',
+        adapt: '本工具最少 1 人份 15g、熱水補到④圓圈上緣，粉量比原版多，會更濃。150 秒等於原版 2 分鐘＋30 秒；旋轉那一步請自己照做。Hoffmann 是 2007 年世界咖啡師冠軍，這份不是愛樂壓大賽配方。',
+        src: 'https://www.th3rdwave.coffee/recipe/UHJvZHVjdFJlY2lwZTpralRJR3RVemk=/',
+        srcName: 'Th3rdwave 配方整理'
+      },
+      wac2019: {
+        roast: 2, servings: 2, waitSec: 30, steepTime: 40, tableHeightZone: 2, pressStyle: 2,
+        title: '2019 世界愛樂壓大賽冠軍 Wendelien van Bunnik（荷蘭）風格',
+        orig: '反壓、30g 粗研磨、100g 水 92°C，用力攪拌約 20 下，0:40 翻轉下壓，壓完再兌 120g 92°C 熱水。',
+        adapt: '本工具是正放、熱水補到④圓圈上緣再兌 1 管，總水量比原版多很多，濃度會明顯較淡。泡 40 秒是滑桿下限，研磨度原版偏粗。',
+        src: 'https://aeroprecipe.com/recipes/2019-wac-1st-place',
+        srcName: 'AeroPrecipe 2019 冠軍配方'
+      },
+      wac2021: {
+        roast: 1, servings: 1, waitSec: 240, steepTime: 60, tableHeightZone: 2, pressStyle: 1,
+        title: '2021 世界愛樂壓大賽冠軍 Tuomas Merikanto（芬蘭）風格',
+        orig: '反壓、雙層洗過的濾紙、18g 粉、80°C 水共 200g：先注 50g 輕攪 3 下，再注到 200g。',
+        adapt: '只取 80°C 低溫這個特點：水滾後開蓋等約 4 分鐘，讓水溫降到 80°C 上下（粗估，依熱水壺而異）。粉量用本工具的 1 人份 15g；浸泡 60 秒是本工具的設定，原版其餘步驟請看出處。',
+        src: 'https://www.gustoscoffeeco.com/how-to-brew-extraordinary-championship-aeropress-coffee/',
+        srcName: 'Gusto’s 冠軍配方整理'
+      }
+    };
+
+    const tableZoneSpecs = {
+      1: {
+        name: '🟢 偏低桌面 / 升降桌調低',
+        shortBadge: '肚臍省力甜區',
+        rulerTranslateY: -85,
+        topLandmarkIdx: 2,
+        botLandmarkIdx: 4,
+        topLandmarkName: '肚臍 / 小腹線',
+        botLandmarkName: '大腿根部線',
+        laserColorDark: '#10b981',
+        laserColorLight: '#059669',
+        ergoActionTitle: '手臂微伸直自然垂掛・100%垂直省力',
+        ergoCheckDesc: '壓筒頂蓋對齊【肚臍 / 小腹線】、桌面對齊【大腿根部線】。雙肩自然放鬆下垂，手臂自重 100% 垂直傳給活塞，零斜推分力！',
+        sweetnessBonus: 0,
+        clarityBonus: 0,
+        bitternessPenalty: 0
+      },
+      2: {
+        name: '🔵 標準流理台 / 餐桌站姿',
+        shortBadge: '肋骨標準水平區',
+        rulerTranslateY: 5,
+        topLandmarkIdx: 1,
+        botLandmarkIdx: 3,
+        topLandmarkName: '肋骨下緣線',
+        botLandmarkName: '骨盆 / 腰帶線',
+        laserColorDark: '#38bdf8',
+        laserColorLight: '#0284c7',
+        ergoActionTitle: '前臂90°水平(如端盤子)・手肘貼肋骨',
+        ergoCheckDesc: '壓筒頂蓋對齊【肋骨下緣線】、桌面對齊【骨盆 / 腰帶線】。前臂剛好呈 90° 水平，手肘輕貼肋骨兩側當支點即可穩定推進。',
+        sweetnessBonus: 0,
+        clarityBonus: 0,
+        bitternessPenalty: 0
+      },
+      3: {
+        name: '🟠 坐姿桌面 / 高吧台',
+        shortBadge: '胸口過高需補償',
+        rulerTranslateY: 95,
+        topLandmarkIdx: 0,
+        botLandmarkIdx: 2,
+        topLandmarkName: '鎖骨 / 胸口線',
+        botLandmarkName: '肚臍 / 小腹線',
+        laserColorDark: '#f59e0b',
+        laserColorLight: '#d97706',
+        ergoActionTitle: '⚠️ 補償：手指扣住頂蓋「往下拉單槓」',
+        ergoCheckDesc: '壓筒頂蓋高達【鎖骨 / 胸口線】。切勿抬高手肘硬推！請把杯子移到桌緣，手指扣住壓筒頂蓋邊緣，像「拉單槓沉肩往下拉」。',
+        sweetnessBonus: 0,
+        clarityBonus: 0,
+        bitternessPenalty: 0
+      }
+    };
+
+    const gestureSpecs = {
+      1: {
+        name: '① 雙手放著自然沉',
+        shortName: '① 自然沉',
+        strokeHexDark: '#38bdf8',
+        strokeHexLight: '#0284c7',
+        forceTitle: '↓ 7.5kg 手臂自重微壓',
+        bedComp: 1.0,
+        bedColor: '#78350f',
+        bedSvgText: '粉餅蓬鬆・孔隙100%',
+        streamWidth: 3,
+        streamMode: 'thin',
+        streamSvgText: '細如筆芯・垂直安靜單水柱',
+        baseSec: 37,
+        pStyle: 0.30,
+        checkBed: '粉層保持蓬鬆多孔，水流均勻穿過顆粒縫隙，最不易產生通道效應，細粉零穿透。',
+        checkStream: '剛跨過 Prismo 閥門開啟門檻，流出一條「細如原子筆芯」的安靜水柱，完全不起泡。'
+      },
+      2: {
+        name: '② 手掌微出力穩推',
+        shortName: '② 手掌穩推',
+        strokeHexDark: '#10b981',
+        strokeHexLight: '#059669',
+        forceTitle: '↓↓ 11kg 手掌等速穩推',
+        bedComp: 0.84,
+        bedColor: '#652b0d',
+        bedSvgText: '粉餅微縮・孔隙85%',
+        streamWidth: 5.5,
+        streamMode: 'normal',
+        streamSvgText: '竹筷粗・筆直穩定標準水柱',
+        baseSec: 26,
+        pStyle: 0.45,
+        checkBed: '粉層適度微縮形成均勻濾床，完美攔截雜質並讓焦糖甜感與果酸充份融合。',
+        checkStream: '底部呈現約「竹筷粗細」的筆直飽滿水柱，從頭到尾水流穩定不斷裂。'
+      },
+      3: {
+        name: '③ 前臂加壓快推',
+        shortName: '③ 前臂快推',
+        strokeHexDark: '#f59e0b',
+        strokeHexLight: '#d97706',
+        forceTitle: '↓↓↓ 16kg 前臂加壓快推',
+        bedComp: 0.68,
+        bedColor: '#4c1d06',
+        bedSvgText: '粉餅壓薄・孔隙65%',
+        streamWidth: 8.5,
+        streamMode: 'crema',
+        streamSvgText: '粗強水柱＋表面金黃油脂泡',
+        baseSec: 19,
+        pStyle: 0.62,
+        checkBed: '較高壓力將咖啡油脂（Crema）與部分細粉擠過濾網，醇厚度極高但尾段苦韻略升。',
+        checkStream: '水柱強勁偏粗，衝入下壺時液面浮現一層金黃色細密油脂泡沫（適合冰拿鐵基底）。'
+      },
+      4: {
+        name: '④ 聳肩全身硬壓 ❌',
+        shortName: '④ 全身硬壓❌',
+        strokeHexDark: '#ef4444',
+        strokeHexLight: '#dc2626',
+        forceTitle: '↓↓↓↓ >20kg 壓死塞車警戒',
+        bedComp: 0.48,
+        bedColor: '#290f02',
+        bedSvgText: '❌ 粉餅壓死＋邊緣破裂',
+        streamWidth: 1.5,
+        streamMode: 'choked',
+        streamSvgText: '❌ 前3秒噴水花 ➔ 塞死變滴水',
+        baseSec: 44,
+        pStyle: 0.95,
+        checkBed: '瞬間高壓把粉層壓成「不透水水泥塊」，細粉塞死濾紙，水流改從筒壁邊緣撕裂破洞偷跑！',
+        checkStream: '前 3 秒閥門被衝爆亂噴水花；第 5 秒後粉餅鎖死變成一滴一滴落下，反而要壓 44～68 秒！'
+      }
+    };
+
+    const defaultSavedRecipes = [
+      { id: 'def_1', name: '☀️ 平日早安・中焙2人順口美式', roast: 3, servings: 2, waitSec: 60, steepTime: 105, tableHeightZone: 2, pressStyle: 2 },
+      { id: 'def_2', name: '🧊 夏日冰鎮・中淺焙果香Bypass', roast: 2, servings: 2, waitSec: 30, steepTime: 120, tableHeightZone: 1, pressStyle: 1 }
+    ];
+
+    let savedRecipes = [];
+
+    function clamp(val, min, max) {
+      return Math.max(min, Math.min(max, val));
+    }
+
+    // ===== EY model + taste calibration =====
+    const EY_UNCERTAINTY = 1.5;          // shown as ± range
+    const CALIB_KEY = 'aeropress_prismo_taste_calib_v1';
+    let calib = { offset: 0, count: 0, log: [] };
+    let lastBrew = null;
+
+    function modelEY(dose, waterVol, temp, roast, steep, stir, pressStyle) {
+      const ratio = waterVol / dose;                                   // e.g. 15g/228mL ≈ 15, 30g/215mL ≈ 7
+      const concPenalty = 0.9 * clamp((14 - ratio) / 7, 0, 1.6);       // very concentrated brews extract a bit less
+      const ceiling = 21.5 + 0.08 * (temp - 92) + 0.35 * (roast - 3) - concPenalty;
+      const tau = 42 / (1 + 0.035 * stir);                             // stirring speeds things up
+      const progress = 1 - Math.exp(-(steep + 10) / tau);              // +10s ≈ pour time
+      const pressBonus = [0, 0, 0.1, 0.3, 0.5][pressStyle] || 0;
+      return ceiling * progress + pressBonus;
+    }
+
+    function loadCalibration() {
+      try {
+        const raw = localStorage.getItem(CALIB_KEY);
+        if (raw) {
+          const c = JSON.parse(raw);
+          if (typeof c.offset === 'number') calib = { offset: c.offset, count: c.count || 0, log: Array.isArray(c.log) ? c.log : [] };
+        }
+      } catch (e) {}
+    }
+
+    function saveCalibration() {
+      try { localStorage.setItem(CALIB_KEY, JSON.stringify(calib)); } catch (e) {}
+    }
+
+    // Taste tells roughly where the real EY landed: sour/thin ≈ below 18, sweet ≈ about 20, bitter/astringent ≈ above 22.
+    // Each answer nudges the offset partway, and only when the estimate disagrees with the taste.
+    function submitTaste(kind) {
+      if (!lastBrew) return;
+      const est = lastBrew.eyModel + calib.offset;
+      let target = null;
+      let weight = 0.5;
+      if (kind === 'sour' && est > 17.5) target = 17.0;
+      if (kind === 'bitter' && est < 22.5) target = 23.0;
+      if (kind === 'good') { target = 20.0; weight = 0.3; }
+      const before = calib.offset;
+      if (target !== null) {
+        calib.offset = +clamp(calib.offset + weight * (target - est), -4, 4).toFixed(2);
+      }
+      calib.count += 1;
+      calib.log.unshift({ kind, eyModel: +lastBrew.eyModel.toFixed(2), roast: lastBrew.roast, steep: lastBrew.steepTime, at: new Date().toISOString().slice(0, 10) });
+      calib.log = calib.log.slice(0, 20);
+      saveCalibration();
+
+      const label = { sour: '偏酸、水水的', good: '甜、剛好', bitter: '偏苦、澀口' }[kind];
+      const delta = +(calib.offset - before).toFixed(1);
+      let msg = `已記錄「${label}」。`;
+      if (delta > 0) msg += `估計值上調 ${delta}%，代表你的磨豆機或手法萃取得比模型以為的多。`;
+      else if (delta < 0) msg += `估計值下調 ${Math.abs(delta)}%，代表實際萃取得比模型以為的少。`;
+      else msg += '跟目前估計一致，不需要調整。';
+      if (kind === 'sour') msg += ' 下次可以泡久一點，或水滾後少等一點。';
+      if (kind === 'bitter') msg += ' 下次可以縮短浸泡，或水滾後多等一點；苦澀也可能來自豆子本身或細粉太多。';
+      document.getElementById('tasteFeedback').textContent = msg;
+      renderAll();
+    }
+
+    function resetCalibration() {
+      calib = { offset: 0, count: 0, log: [] };
+      saveCalibration();
+      document.getElementById('tasteFeedback').textContent = '已重設，萃取率回到模型的預設估計。';
+      renderAll();
+    }
+
+    function renderCalibStatus() {
+      const el = document.getElementById('calibStatus');
+      if (!calib.count) { el.textContent = '尚未校正'; return; }
+      const sign = calib.offset > 0 ? '+' : '';
+      el.textContent = `已回饋 ${calib.count} 次・校正 ${sign}${calib.offset.toFixed(1)}%`;
+    }
+
+    function initTheme() {
+      try {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          state.theme = savedTheme;
+        } else {
+          const attr = document.documentElement.getAttribute('data-theme');
+          if (attr === 'light' || attr === 'dark') state.theme = attr;
+          else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) state.theme = 'light';
+        }
+      } catch (e) {}
+      applyThemeToDOM();
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, state.theme);
+      } catch (e) {}
+      applyThemeToDOM();
+      renderAll();
+    }
+
+    function applyThemeToDOM() {
+      document.documentElement.setAttribute('data-theme', state.theme);
+      const iconEl = document.getElementById('themeToggleIcon');
+      const txtEl = document.getElementById('themeToggleText');
+      if (state.theme === 'dark') {
+        iconEl.textContent = '☀️';
+        txtEl.textContent = '切換淺色晨光館';
+      } else {
+        iconEl.textContent = '🌙';
+        txtEl.textContent = '切換深色實驗室';
+      }
+    }
+
+    function getThemeColors() {
+      const isLight = state.theme === 'light';
+      return {
+        isLight,
+        svgBg: isLight ? '#f6f2eb' : '#0b0f19',
+        svgPanel: isLight ? '#ffffff' : '#111827',
+        svgGrid: isLight ? '#e2d9cc' : '#1e293b',
+        svgSubGrid: isLight ? '#ede6dc' : '#111827',
+        svgBorder: isLight ? '#d5cbbd' : '#334155',
+        svgAxis: isLight ? '#475569' : '#94a3b8',
+        svgTextMain: isLight ? '#1e293b' : '#f8fafc',
+        svgTextSub: isLight ? '#576574' : '#cbd5e1',
+        svgTextMuted: isLight ? '#8395a7' : '#64748b'
+      };
+    }
+
+    function toggleParamDeck() {
+      state.isParamCollapsed = !state.isParamCollapsed;
+      syncContainersUI();
+    }
+
+    function toggleEngSubDrawer() {
+      state.isEngSubExpanded = !state.isEngSubExpanded;
+      syncContainersUI();
+    }
+
+    // Stepper functions for Sticky Interactive Mini-Bar (Method A)
+    function stepWait(delta) {
+      state.waitSec = clamp(state.waitSec + delta, 0, 300);
+      state.activeChamp = null;
+      document.getElementById('coldWaterSlider').value = state.waitSec;
+      renderAll();
+    }
+
+    // Rough kettle cooling: freshly boiled ~98°C, drops ~2°C in the first 30s, then slows (Newton cooling toward 25°C room temp).
+    function pourTempAfterWait(sec) {
+      return 25 + 73 * Math.exp(-0.000925 * sec);
+    }
+
+    function stepSteepTime(delta) {
+      const next = clamp(state.steepTime + delta, 40, 180);
+      state.steepTime = next;
+      state.activeChamp = null;
+      document.getElementById('steepTimeSlider').value = state.steepTime;
+      renderAll();
+    }
+
+    function syncContainersUI() {
+      const leftCol = document.getElementById('leftControlColumn');
+      const rightCol = document.getElementById('rightDashboardColumn');
+      const btnTxt = document.getElementById('txtToggleParamDeck');
+      const stickySopStrip = document.getElementById('stickySopMiniStrip');
+
+      if (state.isParamCollapsed) {
+        leftCol.classList.add('hidden');
+        rightCol.className = 'lg:col-span-12 space-y-3.5 transition-all';
+        btnTxt.textContent = '🔽 展開設定面板';
+        stickySopStrip.classList.remove('hidden');
+      } else {
+        leftCol.classList.remove('hidden');
+        rightCol.className = 'lg:col-span-7 lg:sticky lg:top-[68px] space-y-3.5 transition-all';
+        btnTxt.textContent = '🔼 收合設定面板';
+        stickySopStrip.classList.add('hidden');
+      }
+
+      const engSubBody = document.getElementById('engSubDrawerBody');
+      const engSubTxt = document.getElementById('txtToggleEngSubDrawer');
+
+      if (state.isEngSubExpanded) {
+        engSubBody.classList.remove('hidden');
+        engSubTxt.textContent = '📐 收合「工程剖面 × 雷射基準線 × 動態座標尺」圖解 ▴';
+      } else {
+        engSubBody.classList.add('hidden');
+        engSubTxt.textContent = '🔍 展開「工程剖面 × 雷射基準線 × 動態座標尺」圖解 ▾';
+      }
+    }
+
+    function computePressSeconds(servings, pressStyle, actualTemp, roast, tableZone) {
+      const base = gestureSpecs[pressStyle].baseSec;
+      let doseMult = 1.0;
+      if (servings === 2) {
+        doseMult = pressStyle === 4 ? 1.23 : 1.19;
+      } else if (servings === 4) {
+        doseMult = pressStyle === 4 ? 1.55 : 1.52;
+      }
+      let ergoDelta = 0;
+      if (tableZone === 1) ergoDelta = -1;
+      if (tableZone === 3) ergoDelta = pressStyle >= 3 ? 5 : 3;
+
+      const tempRoastDelta = Math.round((90 - actualTemp) * 0.12 + (roast - 3) * 0.5);
+      return Math.round(base * doseMult + tempRoastDelta + ergoDelta);
+    }
+
+    function selectRoast(r) {
+      state.roast = r;
+      state.activeChamp = null;
+      applyRoastAndServingDefaults();
+      renderAll();
+    }
+
+    function selectServings(s) {
+      state.servings = s;
+      state.activeChamp = null;
+      applyRoastAndServingDefaults();
+      renderAll();
+    }
+
+    function selectTableZone(z) {
+      state.tableHeightZone = z;
+      state.activeChamp = null;
+      renderAll();
+    }
+
+    function selectPressStyle(p) {
+      state.pressStyle = p;
+      state.activeChamp = null;
+      renderAll();
+    }
+
+    function applyRoastAndServingDefaults() {
+      const preset = roastPresets[state.roast];
+      state.waitSec = preset.wait;
+      state.steepTime = preset.steep[state.servings];
+      state.pressStyle = preset.pressStyle;
+
+      document.getElementById('coldWaterSlider').value = state.waitSec;
+      document.getElementById('steepTimeSlider').value = state.steepTime;
+    }
+
+    function applyChampionPreset(key) {
+      const c = championPresets[key];
+      if (!c) return;
+      state.roast = c.roast;
+      state.servings = c.servings;
+      state.waitSec = c.waitSec;
+      state.steepTime = c.steepTime;
+      state.tableHeightZone = c.tableHeightZone || 2;
+      state.pressStyle = c.pressStyle;
+      state.activeChamp = key;
+
+      document.getElementById('coldWaterSlider').value = state.waitSec;
+      document.getElementById('steepTimeSlider').value = state.steepTime;
+      renderAll();
+    }
+
+    function onSliderChange() {
+      state.waitSec = parseInt(document.getElementById('coldWaterSlider').value, 10);
+      state.steepTime = parseInt(document.getElementById('steepTimeSlider').value, 10);
+      state.activeChamp = null;
+      renderAll();
+    }
+
+    // ===== Bean info + grind record =====
+    const BEAN_KEY = 'aeropress_prismo_bean_info_v1';
+    const BEAN_FIELDS = {
+      beanClicks: 'clicks', beanGrinder: 'grinder', beanShopGrind: 'shopGrind',
+      beanBlend: 'blend', beanVariety: 'variety', beanProcess: 'process',
+      beanOrigin: 'origin', beanSource: 'source', beanRoastDate: 'roastDate'
+    };
+
+    function emptyBean() {
+      return { grindMode: 'self', clicks: '', grinder: '', shopGrind: '', blend: '', variety: '', process: '', origin: '', source: '', roastDate: '' };
+    }
+
+    function cleanBean(b) {
+      const out = emptyBean();
+      if (b && typeof b === 'object') {
+        Object.keys(out).forEach(k => { if (typeof b[k] === 'string') out[k] = b[k].slice(0, 40); });
+      }
+      if (out.grindMode !== 'shop') out.grindMode = 'self';
+      return out;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function grindText(b) {
+      if (b.grindMode === 'shop') return b.shopGrind ? `店家磨・${b.shopGrind}` : '';
+      if (b.clicks) return `手磨 ${b.clicks} 格` + (b.grinder ? `（${b.grinder}）` : '');
+      return '';
+    }
+
+    function beanTags(b) {
+      return [b.blend, b.origin, b.variety, b.process].filter(Boolean);
+    }
+
+    function hasBean(b) {
+      return !!(grindText(b) || beanTags(b).length || b.source || b.roastDate);
+    }
+
+    function beanCardText(b) {
+      return [...beanTags(b), grindText(b), b.source ? '購自 ' + b.source : ''].filter(Boolean).join('・');
+    }
+
+    function loadBean() {
+      try {
+        const raw = localStorage.getItem(BEAN_KEY);
+        if (raw) state.bean = cleanBean(JSON.parse(raw));
+      } catch (e) {}
+      syncBeanInputs();
+      renderBeanInfo();
+    }
+
+    function saveBean() {
+      try { localStorage.setItem(BEAN_KEY, JSON.stringify(state.bean)); } catch (e) {}
+    }
+
+    function syncBeanInputs() {
+      Object.entries(BEAN_FIELDS).forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = state.bean[key];
+      });
+    }
+
+    function onBeanChange() {
+      Object.entries(BEAN_FIELDS).forEach(([id, key]) => {
+        state.bean[key] = document.getElementById(id).value.trim();
+      });
+      saveBean();
+      renderBeanInfo();
+    }
+
+    function setGrindMode(m) {
+      state.bean.grindMode = m === 'shop' ? 'shop' : 'self';
+      saveBean();
+      renderBeanInfo();
+    }
+
+    function clearBean() {
+      state.bean = emptyBean();
+      saveBean();
+      syncBeanInputs();
+      renderBeanInfo();
+    }
+
+    function renderBeanInfo() {
+      const b = state.bean;
+      document.querySelectorAll('.grindmode-btn').forEach(btn => {
+        const on = btn.dataset.grindmode === b.grindMode;
+        btn.classList.remove('t-btn-active', 't-btn-idle');
+        btn.classList.add(on ? 't-btn-active' : 't-btn-idle');
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      document.getElementById('grindSelfRow').classList.toggle('hidden', b.grindMode !== 'self');
+      document.getElementById('grindShopRow').classList.toggle('hidden', b.grindMode !== 'shop');
+
+      const g = grindText(b);
+      document.getElementById('headerGrind').textContent = g || (b.grindMode === 'shop' ? '店家磨' : '中細研磨');
+
+      const parts = [roastPresets[state.roast].name, ...beanTags(b)];
+      if (b.source) parts.push('購自 ' + b.source);
+      if (g) parts.push(g);
+      if (b.roastDate) {
+        const d = new Date(b.roastDate + 'T00:00:00');
+        const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+        parts.push(!isNaN(days) && days >= 0 ? `烘焙後 ${days} 天` : `烘焙日 ${b.roastDate}`);
+      }
+      document.getElementById('beanSummary').textContent = parts.join('・');
+    }
+
+    function loadSavedRecipes() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        savedRecipes = raw ? JSON.parse(raw) : [...defaultSavedRecipes];
+        // Older bookmarks stored cold-water grids; switch them to the roast's default wait time.
+        savedRecipes = savedRecipes.map(r => (typeof r.waitSec === 'number') ? r
+          : { ...r, waitSec: (roastPresets[r.roast] || roastPresets[2]).wait });
+      } catch (e) {
+        savedRecipes = [...defaultSavedRecipes];
+      }
+      renderSavedRecipesList();
+    }
+
+    function saveCurrentRecipe() {
+      const input = document.getElementById('customRecipeName');
+      const rName = roastPresets[state.roast].name;
+      const fallback = `${rName}・${state.servings}人 (等${state.waitSec}s/泡${state.steepTime}s)`;
+      const name = (input.value || '').trim() || fallback;
+
+      savedRecipes.unshift({
+        id: 'rec_' + Date.now(),
+        name,
+        roast: state.roast,
+        servings: state.servings,
+        waitSec: state.waitSec,
+        steepTime: state.steepTime,
+        tableHeightZone: state.tableHeightZone,
+        pressStyle: state.pressStyle,
+        bean: hasBean(state.bean) ? { ...state.bean } : undefined
+      });
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes)); } catch (e) {}
+      input.value = '';
+      renderSavedRecipesList();
+    }
+
+    function applySavedRecipe(id) {
+      const item = savedRecipes.find(r => r.id === id);
+      if (!item) return;
+      state.roast = item.roast;
+      state.servings = item.servings;
+      state.waitSec = item.waitSec;
+      state.steepTime = item.steepTime;
+      state.tableHeightZone = item.tableHeightZone || 2;
+      state.pressStyle = item.pressStyle;
+      state.activeChamp = null;
+      if (item.bean) {
+        state.bean = cleanBean(item.bean);
+        saveBean();
+        syncBeanInputs();
+      }
+
+      document.getElementById('coldWaterSlider').value = state.waitSec;
+      document.getElementById('steepTimeSlider').value = state.steepTime;
+      renderAll();
+    }
+
+    function deleteSavedRecipe(id, ev) {
+      ev.stopPropagation();
+      savedRecipes = savedRecipes.filter(r => r.id !== id);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes)); } catch (e) {}
+      renderSavedRecipesList();
+    }
+
+    function resetDefaultSaved() {
+      savedRecipes = [...defaultSavedRecipes];
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes)); } catch (e) {}
+      renderSavedRecipesList();
+    }
+
+    function renderSavedRecipesList() {
+      const container = document.getElementById('savedRecipesList');
+      document.getElementById('savedCountBadge').textContent = `已存 ${savedRecipes.length} 組`;
+      if (savedRecipes.length === 0) {
+        container.innerHTML = `<div class="text-xs t-text-muted py-1">尚無自訂書籤，輸入名稱後點「＋儲存組合」即可記憶</div>`;
+        return;
+      }
+      const shortG = { 1: '①自然沉', 2: '②穩推', 3: '③快推', 4: '④硬壓' };
+      container.innerHTML = savedRecipes.map(item => `
+        <div onclick="applySavedRecipe('${item.id}')"
+          class="shrink-0 group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl t-sub border hover:border-amber-500 cursor-pointer transition-all">
+          <div>
+            <div class="font-bold text-xs t-text-main group-hover:text-amber-500 whitespace-nowrap">
+              ${item.name}
+            </div>
+            <div class="text-[10px] t-text-sub mono-num whitespace-nowrap">
+              ${roastPresets[item.roast]?.name || ''}・${item.servings}人・<span class="t-sky font-bold">等${item.waitSec}s</span>・${item.steepTime}s・${shortG[item.pressStyle]}
+            </div>
+            ${item.bean && beanCardText(cleanBean(item.bean)) ? `<div class="text-[10px] t-text-sub whitespace-nowrap">🫘 ${escapeHtml(beanCardText(cleanBean(item.bean)))}</div>` : ''}
+          </div>
+          <button onclick="deleteSavedRecipe('${item.id}', event)" class="t-text-muted hover:text-red-500 px-1 py-0.5 cursor-pointer" title="刪除書籤">
+            ×
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function formatWaitText(sec) {
+      if (sec === 0) return '水滾直接倒';
+      if (sec < 60) return `等 ${sec} 秒`;
+      const m = Math.floor(sec / 60), r = sec % 60;
+      return r ? `等 ${m} 分 ${r} 秒` : `等 ${m} 分鐘`;
+    }
+
+    function renderAnatomySvg(gSpec, zSpec) {
+      const tc = getThemeColors();
+      const laserColor = tc.isLight ? zSpec.laserColorLight : zSpec.laserColorDark;
+      const gestureColor = tc.isLight ? gSpec.strokeHexLight : gSpec.strokeHexDark;
+
+      // Sync SVG background & panel colors with Light / Dark mode
+      document.getElementById('svgAnatomyBg').setAttribute('fill', tc.svgBg);
+      document.getElementById('svgCadGridPath').setAttribute('stroke', tc.svgGrid);
+
+      ['svgHeaderBoxL', 'svgHeaderBoxR', 'svgDimBox'].forEach(id => {
+        const el = document.getElementById(id);
+        el.setAttribute('fill', tc.svgPanel);
+        el.setAttribute('stroke', tc.svgBorder);
+      });
+      ['svgHeaderTxtL', 'svgHeaderTxtR', 'svgDimLabel'].forEach(id => {
+        document.getElementById(id).setAttribute('fill', tc.svgAxis);
+      });
+
+      const wellBg = document.getElementById('svgRulerWellBg');
+      wellBg.setAttribute('fill', tc.svgPanel);
+      wellBg.setAttribute('stroke', tc.svgBorder);
+      document.getElementById('svgRulerSpine').setAttribute('stroke', tc.svgBorder);
+      document.getElementById('svgRulerTicks').setAttribute('stroke', tc.svgAxis);
+
+      // 1. Slide Body Coordinate Ruler vertically
+      const rulerGroup = document.getElementById('svgSlidingRuler');
+      rulerGroup.setAttribute('transform', `translate(0, ${zSpec.rulerTranslateY})`);
+
+      for (let idx = 0; idx <= 4; idx++) {
+        const box = document.getElementById(`lm_box_${idx}`);
+        const txt = document.getElementById(`lm_txt_${idx}`);
+        const dot = document.getElementById(`lm_dot_${idx}`);
+
+        if (idx === zSpec.topLandmarkIdx) {
+          box.setAttribute('fill', tc.svgPanel);
+          box.setAttribute('stroke', laserColor);
+          box.setAttribute('stroke-width', '2.2');
+          txt.setAttribute('fill', laserColor);
+          txt.setAttribute('font-weight', '900');
+          dot.setAttribute('fill', laserColor);
+          dot.setAttribute('r', '5.5');
+        } else if (idx === zSpec.botLandmarkIdx) {
+          box.setAttribute('fill', tc.svgPanel);
+          box.setAttribute('stroke', tc.svgAxis);
+          box.setAttribute('stroke-width', '1.8');
+          txt.setAttribute('fill', tc.svgTextMain);
+          txt.setAttribute('font-weight', '800');
+          dot.setAttribute('fill', tc.svgAxis);
+          dot.setAttribute('r', '5');
+        } else {
+          box.setAttribute('fill', tc.svgBg);
+          box.setAttribute('stroke', tc.svgBorder);
+          box.setAttribute('stroke-width', '1.2');
+          txt.setAttribute('fill', tc.svgTextMuted);
+          txt.setAttribute('font-weight', '600');
+          dot.setAttribute('fill', tc.svgBorder);
+          dot.setAttribute('r', '3.5');
+        }
+      }
+
+      // 2. Laser Alignment Lines & Badges
+      const topLaserLine = document.getElementById('svgTopLaserLine');
+      const topLaserDotL = document.getElementById('svgTopLaserDotL');
+      const topLaserArrow = document.getElementById('svgTopLaserArrow');
+      const topBadgeBg = document.getElementById('svgTopAlignBadgeBg');
+      const topBadgeTxt = document.getElementById('svgTopAlignBadgeTxt');
+      const plungerTopBar = document.getElementById('svgPlungerTopBar');
+
+      topLaserLine.setAttribute('stroke', laserColor);
+      topLaserDotL.setAttribute('fill', laserColor);
+      topLaserArrow.setAttribute('fill', laserColor);
+      topBadgeBg.setAttribute('fill', tc.svgPanel);
+      topBadgeBg.setAttribute('stroke', laserColor);
+      topBadgeTxt.setAttribute('fill', laserColor);
+      topBadgeTxt.textContent = `◄ 頂蓋對齊：${zSpec.topLandmarkName}`;
+      plungerTopBar.setAttribute('stroke', laserColor);
+
+      const botBadgeBg = document.getElementById('svgBotAlignBadgeBg');
+      const botBadgeTxt = document.getElementById('svgBotAlignBadgeTxt');
+      botBadgeBg.setAttribute('fill', tc.svgPanel);
+      botBadgeBg.setAttribute('stroke', tc.svgBorder);
+      botBadgeTxt.setAttribute('fill', tc.svgTextMain);
+      botBadgeTxt.textContent = `◄ 桌面對齊：${zSpec.botLandmarkName}`;
+
+      // 3. Force Vector Indicator
+      const forceBox = document.getElementById('svgForceBox');
+      const forceTitle = document.getElementById('svgForceTitle');
+      const ergoSubTitle = document.getElementById('svgErgoSubTitle');
+      const vectorArrows = document.getElementById('svgVectorArrows');
+
+      forceBox.setAttribute('fill', tc.svgPanel);
+      forceBox.setAttribute('stroke', gestureColor);
+      forceTitle.setAttribute('fill', gestureColor);
+      forceTitle.textContent = gSpec.forceTitle;
+      ergoSubTitle.textContent = zSpec.ergoActionTitle;
+      ergoSubTitle.setAttribute('fill', state.tableHeightZone === 3 ? (tc.isLight ? '#d97706' : '#f59e0b') : tc.svgTextSub);
+
+      const xPositions = {
+        1: [410],
+        2: [396, 424],
+        3: [386, 410, 434],
+        4: [378, 400, 420, 442]
+      }[state.pressStyle] || [396, 424];
+
+      vectorArrows.setAttribute('stroke', gestureColor);
+      vectorArrows.innerHTML = xPositions.map(x =>
+        `<path d="M${x},74 L${x},89 M${x - 4},84 L${x},90 L${x + 4},84" />`
+      ).join('');
+
+      // 4. Chamber Water Layers & Coffee Bed Compression
+      const baseBedH = state.servings === 1 ? 18 : (state.servings === 2 ? 30 : 46);
+      const actualBedH = Math.round(baseBedH * gSpec.bedComp);
+      const bedY = 224 - actualBedH;
+
+      const bedRect = document.getElementById('svgCoffeeBed');
+      bedRect.setAttribute('y', bedY);
+      bedRect.setAttribute('height', actualBedH);
+      bedRect.setAttribute('fill', gSpec.bedColor);
+
+      const coldPx = 0;
+      const coldRect = document.getElementById('svgColdLiquid');
+      const coldText = document.getElementById('svgColdText');
+      coldText.setAttribute('fill', tc.isLight ? '#0284c7' : '#38bdf8');
+      if (coldPx > 0) {
+        coldRect.setAttribute('y', bedY - coldPx);
+        coldRect.setAttribute('height', coldPx);
+        coldRect.setAttribute('opacity', '1');
+        coldText.setAttribute('y', bedY - Math.max(2, coldPx / 2 - 3));
+        coldText.textContent = '';
+        coldText.setAttribute('opacity', '1');
+      } else {
+        coldRect.setAttribute('height', 0);
+        coldRect.setAttribute('opacity', '0');
+        coldText.setAttribute('opacity', '0');
+      }
+
+      const hotRect = document.getElementById('svgHotLiquid');
+      const hotHeight = Math.max(5, (bedY - coldPx) - 152);
+      hotRect.setAttribute('y', 152);
+      hotRect.setAttribute('height', hotHeight);
+
+      const partGroup = document.getElementById('svgBedParticles');
+      partGroup.innerHTML = '';
+      const rows = state.servings === 1 ? 2 : (state.servings === 2 ? 3 : 5);
+      const cols = 7;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cx = 373 + c * 11 + (r % 2) * 3;
+          const cy = bedY + 4 + (r / rows) * Math.max(4, actualBedH - 6);
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', cx);
+          circle.setAttribute('cy', cy);
+          circle.setAttribute('r', state.pressStyle === 4 ? 2.6 : 1.9);
+          circle.setAttribute('fill', state.pressStyle === 4 ? '#451a03' : '#f59e0b');
+          partGroup.appendChild(circle);
+        }
+      }
+
+      if (state.pressStyle === 4) {
+        const crack = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        crack.setAttribute('d', `M369,${bedY} L377,${bedY + actualBedH / 2} L368,224 M451,${bedY} L443,${bedY + actualBedH / 2} L452,224`);
+        crack.setAttribute('stroke', '#ef4444');
+        crack.setAttribute('stroke-width', '2.2');
+        crack.setAttribute('fill', 'none');
+        partGroup.appendChild(crack);
+      }
+
+      const bLabel = document.getElementById('svgBedLabel');
+      bLabel.textContent = gSpec.bedSvgText;
+      bLabel.setAttribute('fill', state.pressStyle === 4 ? (tc.isLight ? '#dc2626' : '#ef4444') : (tc.isLight ? '#b45309' : '#f59e0b'));
+
+      // 5. Prismo Stream Output
+      const mainStream = document.getElementById('svgMainStream');
+      const dropsGroup = document.getElementById('svgStreamDrops');
+      dropsGroup.innerHTML = '';
+
+      if (gSpec.streamMode === 'choked') {
+        mainStream.setAttribute('width', '0');
+        const drops = [
+          { x: 410, y: 242, r: 2.8, cls: 'drip-anim' },
+          { x: 410, y: 254, r: 2.8, cls: 'drip-anim' },
+          { x: 392, y: 244, r: 1.8, cls: '' },
+          { x: 428, y: 245, r: 1.8, cls: '' },
+          { x: 384, y: 253, r: 1.6, cls: '' },
+          { x: 436, y: 254, r: 1.6, cls: '' }
+        ];
+        drops.forEach(pt => {
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', pt.x);
+          c.setAttribute('cy', pt.y);
+          c.setAttribute('r', pt.r);
+          c.setAttribute('fill', '#ef4444');
+          if (pt.cls) c.setAttribute('class', pt.cls);
+          dropsGroup.appendChild(c);
+        });
+      } else {
+        const w = gSpec.streamWidth;
+        mainStream.setAttribute('x', 410 - w / 2);
+        mainStream.setAttribute('width', w);
+        mainStream.setAttribute('fill', gestureColor);
+
+        if (gSpec.streamMode === 'crema') {
+          [394, 402, 410, 418, 426].forEach(bx => {
+            const b = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            b.setAttribute('cx', bx);
+            b.setAttribute('cy', 262);
+            b.setAttribute('r', 3.4);
+            b.setAttribute('fill', '#fbbf24');
+            b.setAttribute('stroke', '#b45309');
+            b.setAttribute('stroke-width', '0.7');
+            dropsGroup.appendChild(b);
+          });
+        }
+      }
+
+      const sLabel = document.getElementById('svgStreamLabel');
+      sLabel.textContent = `Prismo 水柱：${gSpec.streamSvgText}`;
+      sLabel.setAttribute('fill', gestureColor);
+
+      document.getElementById('checkTagPosture').textContent = `【${zSpec.topLandmarkName}】`;
+      document.getElementById('checkDescPosture').textContent = zSpec.ergoCheckDesc;
+      document.getElementById('checkTagBed').textContent = gSpec.bedSvgText;
+      document.getElementById('checkDescBed').textContent = gSpec.checkBed;
+      document.getElementById('checkTagStream').textContent = gSpec.streamSvgText;
+      document.getElementById('checkDescStream').textContent = gSpec.checkStream;
+    }
+
+    function buildFlowPoints(concentrateVol, estPressSec, pressStyle) {
+      const avgFlow = +(concentrateVol / estPressSec).toFixed(2);
+      const timeSteps = [];
+      for (let t = 0; t <= 70; t += 5) {
+        timeSteps.push(t);
+      }
+      if (!timeSteps.includes(estPressSec) && estPressSec < 70) {
+        timeSteps.push(estPressSec);
+        timeSteps.sort((a, b) => a - b);
+      }
+
+      return timeSteps.map(t => {
+        if (t >= estPressSec) {
+          return { t, f: 0 };
+        }
+        if (pressStyle === 4) {
+          if (t === 0) return { t, f: +(Math.min(15.2, avgFlow * 2.7)).toFixed(2) };
+          const chokedFlow = avgFlow * 0.76 * Math.exp(-(t - 5) / 42);
+          return { t, f: +clamp(chokedFlow, 0.4, 15.0).toFixed(2) };
+        } else {
+          const ratio = t / estPressSec;
+          const val = avgFlow * (1.22 - 0.44 * ratio);
+          return { t, f: +clamp(val, 0.5, 15.0).toFixed(2) };
+        }
+      });
+    }
+
+    function renderFlowChartSvg(concentrateVol, estPressSec, actualTemp) {
+      const tc = getThemeColors();
+      const svg = document.getElementById('flowChartSvg');
+      const W = 800, H = 260;
+      const padL = 52, padR = 28, padT = 24, padB = 34;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const maxT = 70;
+      const maxF = 16;
+
+      const xMap = t => padL + (clamp(t, 0, maxT) / maxT) * plotW;
+      const yMap = f => padT + plotH - (clamp(f, 0, maxF) / maxF) * plotH;
+
+      const activePts = buildFlowPoints(concentrateVol, estPressSec, state.pressStyle);
+      const refPressSec = computePressSeconds(state.servings, 2, actualTemp, state.roast, 2);
+      const refPts = buildFlowPoints(concentrateVol, refPressSec, 2);
+
+      const buildPathD = (pts, stopSec) => {
+        let d = '';
+        pts.forEach((p, idx) => {
+          if (p.t === stopSec) {
+            const prev = pts[Math.max(0, idx - 1)];
+            const endFlow = prev ? +(prev.f * 0.85).toFixed(2) : 1.5;
+            d += ` L ${xMap(stopSec).toFixed(1)} ${yMap(endFlow).toFixed(1)}`;
+            d += ` L ${xMap(stopSec).toFixed(1)} ${yMap(0).toFixed(1)}`;
+          } else {
+            d += `${idx === 0 ? 'M' : 'L'} ${xMap(p.t).toFixed(1)} ${yMap(p.f).toFixed(1)} `;
+          }
+        });
+        return d.trim();
+      };
+
+      const activePathD = buildPathD(activePts, estPressSec);
+      const activeAreaD = `${activePathD} L ${xMap(70).toFixed(1)} ${yMap(0).toFixed(1)} L ${xMap(0).toFixed(1)} ${yMap(0).toFixed(1)} Z`;
+      const refPathD = buildPathD(refPts, refPressSec);
+
+      const gSpec = gestureSpecs[state.pressStyle];
+      const strokeColor = tc.isLight ? gSpec.strokeHexLight : gSpec.strokeHexDark;
+      const fillColor = state.pressStyle === 4
+        ? 'rgba(239, 68, 68, 0.16)'
+        : (state.pressStyle === 1 ? 'rgba(2, 132, 199, 0.15)' : (state.pressStyle === 2 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(217, 119, 6, 0.15)'));
+
+      document.getElementById('legendCurveDot').style.backgroundColor = strokeColor;
+
+      let gridHtml = '';
+      [0, 4, 8, 12, 16].forEach(fVal => {
+        const y = yMap(fVal);
+        gridHtml += `
+          <line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="${tc.svgGrid}" stroke-width="1" stroke-dasharray="${fVal === 0 ? '' : '4 4'}" />
+          <text x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" font-weight="700" fill="${tc.svgAxis}" class="mono-num">${fVal}</text>
+        `;
+      });
+      gridHtml += `<text x="14" y="${padT + plotH / 2}" transform="rotate(-90, 14, ${padT + plotH / 2})" text-anchor="middle" font-size="11" font-weight="bold" fill="${tc.svgAxis}">瞬時流速 (mL/s)</text>`;
+
+      for (let tVal = 0; tVal <= 70; tVal += 10) {
+        const x = xMap(tVal);
+        gridHtml += `
+          <line x1="${x}" y1="${padT}" x2="${x}" y2="${padT + plotH}" stroke="${tc.svgSubGrid}" stroke-width="1" />
+          <text x="${x}" y="${H - 10}" text-anchor="middle" font-size="11" font-weight="700" fill="${tc.svgAxis}" class="mono-num">${tVal}s</text>
+        `;
+      }
+
+      const stopX = xMap(estPressSec);
+      const badgeAlignRight = estPressSec > 50;
+      const stopLabelX = badgeAlignRight ? stopX - 8 : stopX + 8;
+      const stopAnchor = badgeAlignRight ? 'end' : 'start';
+
+      const stopMarkerHtml = `
+        <line x1="${stopX}" y1="${padT}" x2="${stopX}" y2="${padT + plotH}" stroke="${strokeColor}" stroke-width="2.2" stroke-dasharray="5 3" />
+        <text x="${stopLabelX}" y="${padT + 15}" text-anchor="${stopAnchor}" font-size="11.5" font-weight="900" fill="${strokeColor}" class="mono-num">
+          🔊 第 ${estPressSec}s 聽到嘶聲壓完歸零
+        </text>
+      `;
+
+      let chokedCalloutHtml = '';
+      if (state.pressStyle === 4) {
+        const chokeX = xMap(5);
+        const chokeY = yMap(activePts.find(p => p.t === 5)?.f || 2.0);
+        chokedCalloutHtml = `
+          <circle cx="${chokeX}" cy="${chokeY}" r="6.5" fill="none" stroke="${strokeColor}" stroke-width="2" />
+          <text x="${chokeX + 10}" y="${chokeY - 8}" font-size="11" font-weight="bold" fill="${strokeColor}">
+            ⚠️ 第5秒粉餅壓死鎖定！流速暴跌變滴水
+          </text>
+        `;
+      }
+
+      let dotsHtml = '';
+      activePts.forEach(p => {
+        if (p.t % 5 !== 0 && p.t !== estPressSec) return;
+        const cx = xMap(p.t);
+        const cy = yMap(p.f);
+        dotsHtml += `
+          <g class="cursor-pointer"
+             onmouseenter="showFlowHover(${p.t}, ${p.f}, ${estPressSec})"
+             onclick="showFlowHover(${p.t}, ${p.f}, ${estPressSec})"
+             ontouchstart="showFlowHover(${p.t}, ${p.f}, ${estPressSec})">
+            <circle cx="${cx}" cy="${cy}" r="12" fill="transparent" />
+            <circle cx="${cx}" cy="${cy}" r="5" fill="${strokeColor}" stroke="${tc.svgPanel}" stroke-width="2" />
+          </g>
+        `;
+      });
+
+      const greenBandLabelColor = tc.isLight ? '#059669' : '#10b981';
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${W}" height="${H}" rx="8" fill="${tc.svgBg}" />
+        <rect x="${padL}" y="${yMap(8.5)}" width="${plotW}" height="${yMap(3.5) - yMap(8.5)}" fill="#10b981" opacity="0.12" rx="4" />
+        <text x="${W - padR - 8}" y="${yMap(8.5) + 14}" text-anchor="end" font-size="10.5" font-weight="bold" fill="${greenBandLabelColor}" class="mono-num">理想穩定流速綠帶 (3.5–8.5 mL/s)</text>
+        ${gridHtml}
+        <path d="${refPathD}" fill="none" stroke="${tc.svgAxis}" stroke-width="2" stroke-dasharray="4 4" opacity="0.7" />
+        <path d="${activeAreaD}" fill="${fillColor}" />
+        <path d="${activePathD}" fill="none" stroke="${strokeColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        ${stopMarkerHtml}
+        ${chokedCalloutHtml}
+        ${dotsHtml}
+      `;
+
+      const avgFlow = (concentrateVol / estPressSec).toFixed(1);
+      document.getElementById('flowCurveSummaryText').innerHTML =
+        `當前設定：<strong class="t-text-main mono-num">${state.servings}人份 (${concentrateVol}mL 原液)</strong> ＋「<strong class="t-amber">${gSpec.name}</strong>」，平均流速 <strong class="t-sky mono-num">${avgFlow} mL/s</strong>，第 <strong class="t-emerald mono-num">${estPressSec} 秒</strong> 壓完歸零。`;
+    }
+
+    function showFlowHover(t, f, stopSec) {
+      const status = t >= stopSec ? '(已觸底停止出水)' : '(穩定排液中)';
+      document.getElementById('flowHoverReadout').textContent = `⏱️ 第 ${t}s ➔ 瞬時流速：${f} mL/s ${status}`;
+    }
+
+    function renderAll() {
+      // 1. Unified Theme-Aware Active Button Styling
+      const setActive = (btn, on, activeCls = 't-btn-active') => {
+        btn.classList.remove('t-btn-active', 't-btn-danger-active', 't-btn-idle');
+        btn.classList.add(on ? activeCls : 't-btn-idle');
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      };
+      document.querySelectorAll('.champ-btn').forEach(btn => setActive(btn, btn.id === `champ_${state.activeChamp}`));
+
+      const champBanner = document.getElementById('champNoteBanner');
+      if (state.activeChamp && championPresets[state.activeChamp]) {
+        champBanner.classList.remove('hidden');
+        const cp = championPresets[state.activeChamp];
+        document.getElementById('champNoteText').innerHTML =
+          `<div class="font-black t-amber">${cp.title}</div>` +
+          `<div><strong>原版：</strong>${cp.orig}</div>` +
+          `<div><strong>本工具改編：</strong>${cp.adapt}</div>` +
+          `<div class="t-text-sub">出處：<a class="src-link" href="${cp.src}" target="_blank" rel="noopener">${cp.srcName}</a></div>`;
+      } else {
+        champBanner.classList.add('hidden');
+      }
+
+      document.querySelectorAll('.roast-btn').forEach(btn => setActive(btn, parseInt(btn.dataset.roast, 10) === state.roast));
+      document.querySelectorAll('.serving-btn').forEach(btn => setActive(btn, parseInt(btn.dataset.servings, 10) === state.servings));
+      document.querySelectorAll('.zone-btn').forEach(btn => setActive(btn, parseInt(btn.dataset.zone, 10) === state.tableHeightZone));
+      document.querySelectorAll('.press-btn').forEach(btn => {
+        const pIdx = parseInt(btn.dataset.press, 10);
+        setActive(btn, pIdx === state.pressStyle, pIdx === 4 ? 't-btn-danger-active' : 't-btn-active');
+      });
+
+      // 2. Core Physics, Thermodynamics & Ergonomics Calculations
+      const dose = state.servings === 1 ? 15 : (state.servings === 2 ? 30 : 55);
+      const chamberVol = Math.round(242 - 0.9 * dose);
+      const pourTemp = +pourTempAfterWait(state.waitSec).toFixed(1);
+      // Grounds and the chamber take a few degrees off the poured water.
+      const actualTemp = +(pourTemp - (2.4 + 0.065 * dose)).toFixed(1);
+
+      const stirCount = roastPresets[state.roast].stir;
+      document.getElementById('coldWaterLabel').textContent = formatWaitText(state.waitSec);
+      document.getElementById('steepTimeLabel').textContent = `${state.steepTime}s (攪拌 ${stirCount} 下)`;
+      document.getElementById('inlineMixTempHint').innerHTML = `估算入筒水溫：<strong class="t-amber mono-num">${actualTemp}°C</strong>`;
+      document.getElementById('inlineWaterVolHint').textContent = `倒水時約 ${Math.round(pourTemp)}°C`;
+
+      const concentrateVol = Math.round(chamberVol - 1.95 * dose);
+      const bypassVol = state.servings === 1 ? 0 : (state.servings === 2 ? 250 : 750);
+      const totalDrinkVol = concentrateVol + bypassVol;
+
+      const estPressSeconds = computePressSeconds(state.servings, state.pressStyle, actualTemp, state.roast, state.tableHeightZone);
+      const avgFlowRate = +(concentrateVol / estPressSeconds).toFixed(1);
+
+      [1, 2, 3, 4].forEach(gIdx => {
+        const s1 = computePressSeconds(1, gIdx, actualTemp, state.roast, state.tableHeightZone);
+        const s2 = computePressSeconds(2, gIdx, actualTemp, state.roast, state.tableHeightZone);
+        const s4 = computePressSeconds(4, gIdx, actualTemp, state.roast, state.tableHeightZone);
+        document.getElementById(`gcard_sec_${gIdx}`).textContent =
+          `1人~${s1}s｜2人~${s2}s｜4人~${s4}s`;
+      });
+
+      const gSpec = gestureSpecs[state.pressStyle];
+      const zSpec = tableZoneSpecs[state.tableHeightZone];
+
+      // Immersion EY model (rough): extraction rises fast then levels off toward a ceiling.
+      // Ceiling depends on water temp, roast and how concentrated the brew is; grind is fixed (medium-fine).
+      // Table height has no effect; press style only adds a little (fines pushed through).
+      const eyModel = modelEY(dose, chamberVol, actualTemp, state.roast, state.steepTime, stirCount, state.pressStyle);
+      const ey = +clamp(eyModel + calib.offset, 12, 26).toFixed(1);
+      const eyLo = +(ey - EY_UNCERTAINTY).toFixed(1);
+      const eyHi = +(ey + EY_UNCERTAINTY).toFixed(1);
+      const finalTDS = +((ey * dose) / totalDrinkVol).toFixed(2);
+      lastBrew = { eyModel, roast: state.roast, servings: state.servings, waitSec: state.waitSec, steepTime: state.steepTime };
+
+      const acidity = Math.round(clamp(92 - 8.5 * (state.roast - 1) - 3.2 * (ey - 16.5), 12, 96));
+      const sweetness = Math.round(clamp(95 - 5.2 * Math.pow(ey - (20.2 - 0.25 * (state.roast - 3)), 2) - (state.pressStyle === 4 ? 22 : 0) + zSpec.sweetnessBonus, 22, 96));
+      const bitterness = Math.round(clamp(14 + 7.5 * (state.roast - 1) + 7.2 * (ey - 17.5) + 1.5 * (actualTemp - 86) + (state.pressStyle === 4 ? 28 : (state.pressStyle === 3 ? 7 : 0)) + zSpec.bitternessPenalty, 8, 98));
+      const body = Math.round(clamp(52 + 6.5 * state.roast + 5.8 * state.pressStyle - 3.2 * (state.servings - 1), 30, 95));
+      const clarity = Math.round(clamp(82 + 4.0 * (state.servings - 1) - (state.pressStyle === 4 ? 35 : (state.pressStyle === 3 ? 10 : 0)) - 3.5 * Math.max(0, ey - 21.0) + zSpec.clarityBonus, 20, 96));
+
+      // 3. Anti-Clumping Pouring SOP
+      const sopBadge = document.getElementById('sopBadge');
+      const sopSteps = document.getElementById('sopInlineSteps');
+      const waitTxt = formatWaitText(state.waitSec);
+      const n = (k) => `<span class="mono-num font-bold t-amber">${k}</span>`;
+      if (state.servings === 1) {
+        sopBadge.textContent = '1人份：先粉後水';
+        sopSteps.innerHTML = `${n('①')} 倒 1 平匙粉(15g) ➔ ${n('②')} 熱水（${waitTxt}）倒到 <strong>②圓圈中間</strong>，攪 <strong class="mono-num">${stirCount}</strong> 下 ➔ ${n('③')} 補熱水到 <strong>④圓圈上緣</strong>，泡 <strong class="mono-num">${state.steepTime}s</strong> ➔ ${n('④')} 壓完直接喝。`;
+      } else if (state.servings === 2) {
+        sopBadge.textContent = '2人份：先粉後水＋兌水';
+        sopSteps.innerHTML = `${n('①')} 倒 2 平匙粉(30g) ➔ ${n('②')} 熱水（${waitTxt}）倒到 <strong>②圓圈中間</strong>，攪 <strong class="mono-num">${stirCount}</strong> 下確認沒有乾粉 ➔ ${n('③')} 補熱水到 <strong>④圓圈上緣</strong>，泡 <strong class="mono-num">${state.steepTime}s</strong> ➔ ${n('④')} 壓完，用空筒裝熱水到 <strong class="t-amber">④圓圈上緣</strong> 兌進去。`;
+      } else {
+        sopBadge.textContent = '4人份：分兩次下粉防結塊';
+        sopSteps.innerHTML = `${n('①')} 熱水（${waitTxt}）先倒到 <strong>①圓圈下緣</strong> 墊底 ➔ ${n('②')} 倒 2 匙粉攪散 ➔ ${n('③')} 再倒約 2 匙粉，熱水補到 <strong>④圓圈上緣</strong>，攪 <strong class="mono-num">${stirCount}</strong> 下泡 <strong class="mono-num">${state.steepTime}s</strong> ➔ ${n('④')} 壓完兌 <strong class="t-amber">3 管熱水</strong>（每管到④圓圈上緣），喝起來太淡就少兌一點。`;
+      }
+
+      // 4. Live Ergonomic & Stream Summary
+      const streamColorCls = state.pressStyle === 4 ? 't-red' : (state.pressStyle === 1 ? 't-sky' : (state.pressStyle === 2 ? 't-emerald' : 't-amber'));
+      document.getElementById('liveErgoStreamSummary').innerHTML =
+        `頂蓋對齊<strong class="t-sky">【${zSpec.topLandmarkName}】</strong>（${zSpec.ergoActionTitle}）➔ 目標水柱：<strong class="${streamColorCls}">「${gSpec.streamSvgText}」</strong>（預計 <strong class="mono-num t-text-main">${estPressSeconds}s</strong>）`;
+
+      // 5. Sync Sticky Interactive Quick-Tuner Bar (Method A)
+      document.getElementById('miniRoastSelect').value = String(state.roast);
+      [1, 2, 4].forEach(s => {
+        const b = document.getElementById(`miniServ_${s}`);
+        if (s === state.servings) {
+          b.className = 'px-2 py-0.5 rounded-md text-[11px] font-black mono-num bg-amber-500 text-slate-950 transition-all cursor-pointer';
+        } else {
+          b.className = 'px-2 py-0.5 rounded-md text-[11px] font-bold mono-num t-text-sub hover:text-amber-500 transition-all cursor-pointer';
+        }
+      });
+      document.getElementById('miniColdVal').textContent = `${state.waitSec}s (≈${actualTemp}°C)`;
+      document.getElementById('miniSteepVal').textContent = `${state.steepTime}s (攪${stirCount})`;
+      document.getElementById('miniZoneSelect').value = String(state.tableHeightZone);
+      const miniPressEl = document.getElementById('miniPressSelect');
+      miniPressEl.value = String(state.pressStyle);
+      miniPressEl.className = `bg-transparent text-xs font-black focus:outline-none cursor-pointer mono-num ${
+        state.pressStyle === 4 ? 't-red' : (state.pressStyle === 1 ? 't-sky' : (state.pressStyle === 2 ? 't-emerald' : 't-amber'))
+      }`;
+
+      const bypassCapsuleTxt = state.servings === 1 ? '🫗 免兌水直飲' : (state.servings === 2 ? '🫗 壓後兌 1 管（到④上緣）' : '🫗 壓後兌 3 管（到④上緣）');
+      document.getElementById('stickySopBadge').textContent = sopBadge.textContent.split(' ')[0];
+      document.getElementById('stickySopText').innerHTML = sopSteps.innerHTML;
+      document.getElementById('stickyBypassBadge').textContent = bypassCapsuleTxt;
+
+      // 6. Layer 2: 4 Core KPI Metric Cards
+      document.getElementById('kpiTemp').textContent = `${actualTemp}°C`;
+      const tempTag = document.getElementById('kpiTempTag');
+      if (actualTemp >= 91) {
+        tempTag.textContent = '高溫提香';
+        tempTag.className = 'text-[10px] font-bold t-badge-amber px-1.5 py-0.5 rounded';
+      } else if (actualTemp >= 85) {
+        tempTag.textContent = '黃金平衡溫區';
+        tempTag.className = 'text-[10px] font-bold t-badge-emerald px-1.5 py-0.5 rounded';
+      } else {
+        tempTag.textContent = '低溫甜區';
+        tempTag.className = 'text-[10px] font-bold t-badge-sky px-1.5 py-0.5 rounded';
+      }
+      document.getElementById('kpiWaterSplit').textContent = `水滾後${state.waitSec ? '等 ' + state.waitSec + 's' : '直接倒'}・倒水時約 ${Math.round(pourTemp)}°C`;
+
+      if (state.servings === 1) {
+        document.getElementById('kpiBypassTubes').textContent = '免兌水 (直飲)';
+        document.getElementById('kpiBypassDetail').textContent = `壓出原液約 ${concentrateVol}mL 直接飲用`;
+      } else if (state.servings === 2) {
+        document.getElementById('kpiBypassTubes').textContent = '兌 1 管（到④上緣）';
+        document.getElementById('kpiBypassDetail').textContent = `原液約 ${concentrateVol}mL + 兌水約 250mL`;
+      } else {
+        document.getElementById('kpiBypassTubes').textContent = '兌 3 管（到④上緣）';
+        document.getElementById('kpiBypassDetail').textContent = `原液約 ${concentrateVol}mL + 兌水約 750mL`;
+      }
+
+      document.getElementById('kpiPressSec').textContent = `${estPressSeconds} 秒`;
+      document.getElementById('kpiFlowRate').textContent = `${avgFlowRate} mL/s`;
+      const cakeEl = document.getElementById('kpiCakeStatus');
+      cakeEl.textContent = `${gSpec.bedSvgText}・${gSpec.streamSvgText.split('・')[0]}`;
+      cakeEl.className = state.pressStyle === 4
+        ? 'mt-2 pt-2 border-t t-border text-[11px] font-bold t-red truncate'
+        : 'mt-2 pt-2 border-t t-border text-[11px] font-bold t-emerald truncate';
+
+      document.getElementById('kpiEY').textContent = `${eyLo}–${eyHi}%`;
+      const eyStatus = document.getElementById('kpiEYStatus');
+      if (ey < 18.0) {
+        eyStatus.textContent = '萃取不足(偏酸)';
+        eyStatus.className = 'text-[10px] font-bold t-badge-amber px-1.5 py-0.5 rounded';
+      } else if (ey <= 22.0) {
+        eyStatus.textContent = '黃金甜感區';
+        eyStatus.className = 'text-[10px] font-bold t-badge-emerald px-1.5 py-0.5 rounded';
+      } else {
+        eyStatus.textContent = '過度萃取(偏苦)';
+        eyStatus.className = 'text-[10px] font-bold t-badge-red px-1.5 py-0.5 rounded';
+      }
+      document.getElementById('kpiTDS').textContent = `濃度 TDS ${finalTDS}%｜${zSpec.shortBadge}`;
+
+      // 7. Layer 2: 5D Flavor Bars & Diagnosis
+      const setBar = (id, val) => {
+        document.getElementById(`val${id}`).textContent = `${val}%`;
+        document.getElementById(`bar${id}`).style.width = `${val}%`;
+      };
+      setBar('Sweetness', sweetness);
+      setBar('Clarity', clarity);
+      setBar('Acidity', acidity);
+      setBar('Body', body);
+      setBar('Bitterness', bitterness);
+
+      const diagBox = document.getElementById('diagnosisBox');
+      if (state.pressStyle === 4) {
+        diagBox.innerHTML = `<strong class="t-red">高壓粉餅壓死警告：</strong>你選了「<strong>④ 聳肩全身硬壓</strong>」！粉餅在 <strong class="mono-num">5s</strong> 內被壓成不透水磚塊並產生邊緣裂縫，下壓時間逆勢拖長至 <strong class="mono-num">${estPressSeconds}s</strong>，苦澀風險飆至 <strong class="t-red mono-num">${bitterness}%</strong>！請改選 ① 或 ② 手勢。`;
+      } else if (ey < 18.0) {
+        diagBox.innerHTML = `<strong class="t-amber">風味微調建議（目前偏酸薄）：</strong>估計萃取率約 <strong class="mono-num">${eyLo}–${eyHi}%</strong>，偏低，果酸 (<strong class="mono-num">${acidity}%</strong>) 明顯但甜感尚未完全釋放。建議<strong>「水滾後少等 30 秒」</strong>讓水溫高一點，或<strong>「浸泡時間 +25s」</strong>。`;
+      } else if (ey > 22.0 || bitterness > 55) {
+        diagBox.innerHTML = `<strong class="t-red">風味微調建議（目前苦韻偏高）：</strong>後段苦澀風險達 <strong class="mono-num">${bitterness}%</strong>！建議<strong>「水滾後多等 30 秒」</strong>降一點溫，並改選<strong>「① 雙手放著自然沉」</strong>溫和慢壓。`;
+      } else {
+        diagBox.innerHTML = `<strong class="t-emerald">估計落在甜感區：</strong>估算水溫約 <strong class="mono-num">${actualTemp}°C</strong>，萃取率估計約 <strong class="mono-num">${eyLo}–${eyHi}%</strong>。實際以喝起來為準，喝完可以在下方回饋口感來校正。`;
+      }
+
+      renderCalibStatus();
+      renderBeanInfo();
+
+      // 8. Render Plan B Sub-drawer Engineering SVG & Layer 3 Flow Chart
+      renderAnatomySvg(gSpec, zSpec);
+      renderFlowChartSvg(concentrateVol, estPressSeconds, actualTemp);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadCalibration();
+      loadBean();
+      loadSavedRecipes();
+      applyRoastAndServingDefaults();
+      syncContainersUI();
+      renderAll();
+    });
+  </script>
+</div>
+</body>
+</html>
