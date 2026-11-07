@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import ReporterStatus from '../../components/ReporterStatus.astro';
 import { SECTIONS, formatDate, getArticles, getSectionDescription, sectionOf, url } from '../../lib/site';
 
 export function getStaticPaths() {
@@ -30,7 +31,7 @@ const description = await getSectionDescription(section.key);
         ))}
       </ul>
     ) : (
-      <div class="blank"><b>本版尚未出刊</b>記者還在路上。</div>
+      <div class="blank"><b>本版尚未出刊</b><ReporterStatus /></div>
     )}
   </main>
 </Base>

@@ -191,3 +191,7 @@ footer{text-align:center;margin-top:44px;border-top:3px double var(--rule);paddi
 .article blockquote{margin:0 0 1em;padding-left:1em;border-left:3px solid var(--hair);color:var(--muted)}
 .headline-sub{display:inline-block}
 .dropcap{display:flow-root}
+.reporter-status{transition:opacity .3s}
+.reporter-status.swap{opacity:0}
+/* 手機上狀態句長短不一，保留高度，版面才不會跟著跳 */
+@media (max-width:760px){.extra>span{min-height:5.1em}}

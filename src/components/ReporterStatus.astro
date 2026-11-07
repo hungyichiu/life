@@ -1,0 +1,75 @@
+---
+// 記者現況：沒有 JS 時顯示外出取材；有 JS 時每一則各自隨機排序、各自換句。
+---
+<span class="reporter-status">記者外出取材中。</span>
+
+<script>
+  const STATUSES = [
+    // 跑新聞
+    '記者外出取材中。',
+    '記者還在路上。',
+    '記者說快寫好了，上次也這樣說。',
+    '記者：截稿日是今天？',
+    '記者的相機沒電了。',
+    // 生活
+    '記者吃飯中……',
+    '記者：廁所在哪裡？',
+    '記者正在被狗追！',
+    '記者正在排隊吃拉麵，前面還有 23 人。',
+    '記者去買咖啡豆了，預算已爆。',
+    '記者的咖啡又沖苦了。',
+    '記者在找鑰匙，鑰匙在手上。',
+    '記者：明天一定開始運動。',
+    '記者午睡中，請勿打擾。',
+    '記者迷路了，但堅持不開導航。',
+    '記者正在思考晚餐吃什麼，已經想了一小時。',
+    '記者滑手機滑到忘記要幹嘛。',
+    '記者的書買了，還沒拆。',
+    // 職場
+    '記者OS：假日加班有沒有加班費？',
+    '記者OS：這場會議可以用一封信解決。',
+    '記者OS：需求上週不是這樣說的。',
+    '記者OS：離下班還有幾分鐘？',
+    '記者：這支程式誰寫的？……喔，是我。',
+    '記者已讀不回。',
+    '記者：我這邊是可以動的。',
+    '記者正在「再確認一下」。',
+    '記者請假了，但還在回訊息。',
+    '記者：這個應該很快。（三天前）',
+  ];
+  const MIN_MS = 3500;
+  const SPREAD_MS = 2500;
+  const FADE_MS = 300;
+
+  function shuffled(avoidFirst?: string) {
+    const list = [...STATUSES];
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    // 洗牌重來時，第一句不要和上一輪最後一句相同
+    if (list[0] === avoidFirst) list.push(list.shift()!);
+    return list;
+  }
+
+  document.querySelectorAll<HTMLElement>('.reporter-status').forEach((el) => {
+    let queue = shuffled();
+    const next = () => {
+      const text = queue.shift()!;
+      if (!queue.length) queue = shuffled(text);
+      return text;
+    };
+    el.textContent = next();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const tick = () => {
+      el.classList.add('swap');
+      setTimeout(() => {
+        el.textContent = next();
+        el.classList.remove('swap');
+        setTimeout(tick, MIN_MS + Math.random() * SPREAD_MS);
+      }, FADE_MS);
+    };
+    setTimeout(tick, MIN_MS + Math.random() * SPREAD_MS);
+  });
+</script>

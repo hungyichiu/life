@@ -1,5 +1,5 @@
 ---
-// 報頭拖尾：滑鼠移動噴小物，手機點報頭噴一把。只放在首頁。
+// 報頭拖尾：滑鼠移動噴小物，手機點一下報頭噴一個。只放在首頁。
 ---
 <script>
   const box = document.getElementById('masthead')!;
@@ -41,8 +41,8 @@
   });
   box.addEventListener('pointerup', (e) => {
     if (reduce || e.pointerType === 'mouse') return;
-    if ((e.target as Element).closest('nav,button')) return;
+    if ((e.target as Element).closest('a,button')) return;
     const [x, y] = pos(e);
-    for (let n = 0; n < 7; n++) spawn(x + Math.random() * 120 - 60, y + Math.random() * 50 - 25, 120);
+    spawn(x, y, 60);
   });
 </script>

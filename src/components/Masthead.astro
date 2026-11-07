@@ -7,7 +7,11 @@ const Plate = home ? 'h1' : 'div';
 ---
 <header class="masthead" id="masthead">
   <div class="topline"><span>第 {issue} 期</span><span>台灣．生活版</span><span>定價：一杯愛樂壓</span></div>
-  <Plate class="nameplate"><a href={url()}>{SITE.name}<small>{SITE.nameZh}</small></a></Plate>
+  <Plate class="nameplate">
+    {home
+      ? <>{SITE.name}<small>{SITE.nameZh}</small></>
+      : <a href={url()}>{SITE.name}<small>{SITE.nameZh}</small></a>}
+  </Plate>
   {home && <span class="hint" id="hint">↖ 滑鼠在這裡亂晃看看</span>}
   <div class="dateline">
     <span>{issueDate ? formatDate(issueDate, true) : '創刊準備中'}</span>
