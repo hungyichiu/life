@@ -47,15 +47,15 @@
       --bg-elevated: #e6dfd5;
       --border-color: #dfd7cc;
       --text-main: #1e293b;
-      --text-sub: #576574;
-      --text-muted: #8395a7;
-      --accent-amber: #d97706;
+      --text-sub: #4b5563;
+      --text-muted: #5b6b7c;
+      --accent-amber: #92400e;
       --accent-amber-bg: rgba(217, 119, 6, 0.14);
-      --accent-emerald: #059669;
+      --accent-emerald: #065f46;
       --accent-emerald-bg: rgba(5, 150, 105, 0.13);
-      --accent-sky: #0284c7;
+      --accent-sky: #075985;
       --accent-sky-bg: rgba(2, 132, 199, 0.13);
-      --accent-red: #dc2626;
+      --accent-red: #a61b1b;
       --accent-red-bg: rgba(220, 38, 38, 0.13);
       --svg-bg: #f6f2eb;
       --svg-panel: #ffffff;
@@ -75,15 +75,15 @@
       --bg-elevated: #e6dfd5;
       --border-color: #dfd7cc;
       --text-main: #1e293b;
-      --text-sub: #576574;
-      --text-muted: #8395a7;
-      --accent-amber: #d97706;
+      --text-sub: #4b5563;
+      --text-muted: #5b6b7c;
+      --accent-amber: #92400e;
       --accent-amber-bg: rgba(217, 119, 6, 0.14);
-      --accent-emerald: #059669;
+      --accent-emerald: #065f46;
       --accent-emerald-bg: rgba(5, 150, 105, 0.13);
-      --accent-sky: #0284c7;
+      --accent-sky: #075985;
       --accent-sky-bg: rgba(2, 132, 199, 0.13);
-      --accent-red: #dc2626;
+      --accent-red: #a61b1b;
       --accent-red-bg: rgba(220, 38, 38, 0.13);
       --svg-bg: #f6f2eb;
       --svg-panel: #ffffff;
@@ -116,6 +116,8 @@
       .stream-anim, .drip-anim, .laser-line-anim { animation: none; }
       .bar-transition, .ruler-slide { transition: none; }
     }
+
+    input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 1; }
 
     .mono-num {
       font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
@@ -947,7 +949,7 @@
                 </g>
                 <rect id="svgDimBox" x="526" y="168" width="58" height="34" rx="5" fill="#0b0f19" stroke="#334155" stroke-width="1"/>
                 <text id="svgDimLabel" x="555" y="182" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="bold">總架高</text>
-                <text x="555" y="195" text-anchor="middle" fill="#d97706" font-size="10.5" font-weight="900" class="mono-num">+30cm</text>
+                <text x="555" y="195" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="900" class="mono-num">+30cm</text>
 
                 <g id="svgForceGaugeGroup">
                   <rect id="svgForceBox" x="305" y="36" width="210" height="36" rx="7" fill="#0b0f19" stroke="#10b981" stroke-width="1.8"/>
@@ -965,11 +967,11 @@
                 <rect id="svgChamberWall" x="364" y="118" width="92" height="106" fill="rgba(148,163,184,0.12)" stroke="#64748b" stroke-width="2" rx="4"/>
                 <rect id="svgHotLiquid" x="366" y="152" width="88" height="36" fill="rgba(217, 119, 6, 0.52)"/>
                 <rect id="svgColdLiquid" x="366" y="188" width="88" height="10" fill="rgba(2, 132, 199, 0.55)"/>
-                <text id="svgColdText" x="358" y="196" text-anchor="end" fill="#0284c7" font-size="9.5" font-weight="bold" class="mono-num"></text>
+                <text id="svgColdText" x="358" y="196" text-anchor="end" fill="#075985" font-size="9.5" font-weight="bold" class="mono-num"></text>
 
                 <rect id="svgCoffeeBed" x="366" y="198" width="88" height="26" fill="#652b0d" stroke="#b45309" stroke-width="1.2"/>
                 <g id="svgBedParticles"></g>
-                <text id="svgBedLabel" x="462" y="214" fill="#d97706" font-size="10" font-weight="bold" class="mono-num">粉餅微縮・85%</text>
+                <text id="svgBedLabel" x="462" y="214" fill="#92400e" font-size="10" font-weight="bold" class="mono-num">粉餅微縮・85%</text>
 
                 <g font-size="9" font-weight="bold" class="mono-num">
                   <circle cx="440" cy="134" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.1"/><text x="440" y="137" text-anchor="middle" fill="#f8fafc">4</text>
@@ -1989,7 +1991,7 @@
       forceTitle.setAttribute('fill', gestureColor);
       forceTitle.textContent = gSpec.forceTitle;
       ergoSubTitle.textContent = zSpec.ergoActionTitle;
-      ergoSubTitle.setAttribute('fill', state.tableHeightZone === 3 ? (tc.isLight ? '#d97706' : '#f59e0b') : tc.svgTextSub);
+      ergoSubTitle.setAttribute('fill', state.tableHeightZone === 3 ? (tc.isLight ? '#92400e' : '#f59e0b') : tc.svgTextSub);
 
       const xPositions = {
         1: [410],
@@ -2016,7 +2018,7 @@
       const coldPx = 0;
       const coldRect = document.getElementById('svgColdLiquid');
       const coldText = document.getElementById('svgColdText');
-      coldText.setAttribute('fill', tc.isLight ? '#0284c7' : '#38bdf8');
+      coldText.setAttribute('fill', tc.isLight ? '#075985' : '#38bdf8');
       if (coldPx > 0) {
         coldRect.setAttribute('y', bedY - coldPx);
         coldRect.setAttribute('height', coldPx);
@@ -2063,7 +2065,7 @@
 
       const bLabel = document.getElementById('svgBedLabel');
       bLabel.textContent = gSpec.bedSvgText;
-      bLabel.setAttribute('fill', state.pressStyle === 4 ? (tc.isLight ? '#dc2626' : '#ef4444') : (tc.isLight ? '#b45309' : '#f59e0b'));
+      bLabel.setAttribute('fill', state.pressStyle === 4 ? (tc.isLight ? '#a61b1b' : '#ef4444') : (tc.isLight ? '#92400e' : '#f59e0b'));
 
       // 5. Prismo Stream Output
       const mainStream = document.getElementById('svgMainStream');
@@ -2250,7 +2252,7 @@
         `;
       });
 
-      const greenBandLabelColor = tc.isLight ? '#059669' : '#10b981';
+      const greenBandLabelColor = tc.isLight ? '#065f46' : '#10b981';
       svg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="8" fill="${tc.svgBg}" />
         <rect x="${padL}" y="${yMap(8.5)}" width="${plotW}" height="${yMap(3.5) - yMap(8.5)}" fill="#10b981" opacity="0.12" rx="4" />
